@@ -1,0 +1,14 @@
+C:\Users\HP\Documents\3sem\poDom\projektPO\bin\Debug\net8.0\projektPO.exe
+C:\Users\HP\Documents\3sem\poDom\projektPO\bin\Debug\net8.0\projektPO.deps.json
+C:\Users\HP\Documents\3sem\poDom\projektPO\bin\Debug\net8.0\projektPO.runtimeconfig.json
+C:\Users\HP\Documents\3sem\poDom\projektPO\bin\Debug\net8.0\projektPO.dll
+C:\Users\HP\Documents\3sem\poDom\projektPO\bin\Debug\net8.0\projektPO.pdb
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.AssemblyInfoInputs.cache
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.AssemblyInfo.cs
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.csproj.CoreCompileInputs.cache
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.dll
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\refint\projektPO.dll
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.pdb
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\projektPO.genruntimeconfig.cache
+C:\Users\HP\Documents\3sem\poDom\projektPO\obj\Debug\net8.0\ref\projektPO.dll
