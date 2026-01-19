@@ -19,7 +19,7 @@ namespace projektPO
             private set
             {
                 if (value <= 0)
-                    throw new ArgumentException("Cena musi być większa od zera.");
+                    throw new InvalidPriceException("Cena musi być większa od zera.");
                 _price = value;
             }
         }
@@ -32,5 +32,9 @@ namespace projektPO
         }
 
         public decimal TotalPrice => Price + Store.GetAdditionalCost();
+    }
+    public class InvalidPriceException : Exception
+    {
+        public InvalidPriceException(string message) : base(message) { }
     }
 }
