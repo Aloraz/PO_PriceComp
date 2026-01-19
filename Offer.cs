@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace projektPO
 {
-    public class Offer
+    public class Offer : IPriceable
     {
         private decimal _price;
 
@@ -36,5 +36,9 @@ namespace projektPO
     public class InvalidPriceException : Exception
     {
         public InvalidPriceException(string message) : base(message) { }
+    }
+    public interface IPriceable
+    {
+        decimal TotalPrice { get; }
     }
 }
