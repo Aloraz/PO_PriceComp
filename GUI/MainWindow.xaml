@@ -1,0 +1,133 @@
+﻿<Window x:Class="PriceComp.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PriceComp.GUI"
+        mc:Ignorable="d"
+        Title="Asystent Zakupowy (WPF)" Height="450" Width="800">
+    <Grid>
+        <TabControl>
+            <!-- ZAKŁADKA 1: BAZA OFERT -->
+            <TabItem Header="Baza Ofert">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Button Name="BtnLoad" Content="Załaduj/Odśwież Oferty" Margin="5" Click="BtnLoad_Click"/>
+                    
+                    <DataGrid Name="GridOffers" Grid.Row="1" AutoGenerateColumns="False" Margin="5" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Produkt" Binding="{Binding Product.Name}" Width="200"/>
+                             <DataGridTextColumn Header="Sklep" Binding="{Binding Store.Name}" Width="100"/>
+                            <DataGridTextColumn Header="Cena" Binding="{Binding Price, StringFormat='{}{0:F2} zł'}" Width="80"/>
+                            <DataGridTextColumn Header="Promocja" Binding="{Binding PromoPrice, StringFormat='{}{0:F2} zł'}" Width="80"/>
+                            <DataGridTextColumn Header="Opis Promocji" Binding="{Binding PromoDescription}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- ZAKŁADKA 2: KALKULATOR -->
+            <TabItem Header="Kalkulator Koszyka">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- LEWA STRONA: DOSTĘPNE PRODUKTY -->
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Dostępne Produkty:" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <ListBox Name="ListProducts" Height="300" ScrollViewer.VerticalScrollBarVisibility="Auto" MouseDoubleClick="ListProducts_MouseDoubleClick"/>
+                         <TextBlock Text="(Kliknij dwukrotnie, aby dodać)" FontStyle="Italic" FontSize="10" TextWrapping="Wrap" Margin="0,5"/>
+                    </StackPanel>
+
+                    <!-- ŚRODEK: LISTA ZAKUPÓW -->
+                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                        <TextBlock Text="Lista zakupów (po przecinku):" FontWeight="Bold"/>
+                        <TextBox Name="TxtShoppingList" Height="100" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,5"/>
+                         <TextBlock Text="Np. Cola, Masło" FontStyle="Italic" Foreground="Gray"/>
+                        <Button Content="OBLICZ KOSZYK" Height="40" Margin="0,10" Click="BtnCalculate_Click" Background="#FFDDDDDD"/>
+                    </StackPanel>
+                    
+                    <!-- PRAWA STRONA: WYNIKI -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Ranking Sklepów:" FontWeight="Bold"/>
+                        <ListBox Name="ListResults" Height="300" Margin="0,5">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="5" Margin="0,2" Width="350">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Store.Name}" FontWeight="Bold" FontSize="16"/>
+                                            <TextBlock Text="{Binding Sum, StringFormat='Suma: {0:F2} zł'}" Foreground="Green"/>
+                                            
+                                            <!-- Wyświetlanie braków na czerwono jeśli są -->
+                                            <ItemsControl ItemsSource="{Binding MissingProducts}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding StringFormat='BRAK: {0}'}" Foreground="Red"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Dodaj Ofertę">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20" MaxWidth="400" HorizontalAlignment="Left">
+                        <TextBlock Text="Dodawanie Nowej Oferty" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                        <TextBlock Text="Wybierz Sklep:" Margin="0,5,0,0"/>
+                        <ComboBox Name="ComboStores" Margin="0,0,0,10" DisplayMemberPath="Name"/>
+
+                        <TextBlock Text="Nazwa Produktu:" Margin="0,5,0,0"/>
+                        <TextBox Name="TxtNewName" Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Cena (zł):" Margin="0,5,0,0"/>
+                        <TextBox Name="TxtNewPrice" Margin="0,0,0,10"/>
+
+                        <!-- Opcjonalne pola -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                <TextBlock Text="Ilość:" Margin="0,5,0,0"/>
+                                <TextBox Name="TxtNewQty" Text="1" Margin="0,0,0,10"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                <TextBlock Text="Jednostka:" Margin="0,5,0,0"/>
+                                <ComboBox Name="ComboUnit" IsEditable="True" Text="szt" Margin="0,0,0,10">
+                                    <ComboBoxItem Content="szt"/>
+                                    <ComboBoxItem Content="kg"/>
+                                    <ComboBoxItem Content="g"/>
+                                    <ComboBoxItem Content="l"/>
+                                    <ComboBoxItem Content="ml"/>
+                                    <ComboBoxItem Content="opak"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Content="DODAJ OFERTĘ" Background="#FFDDDDDD" Height="40" Margin="0,10" Click="BtnAddOffer_Click"/>
+                        
+                        <Separator Margin="0,20"/>
+                        
+                        <Button Content="ZAPISZ ZMIANY W PLIKU" Background="#FFADEBAD" Height="40" FontWeight="Bold" Click="BtnSaveFile_Click"/>
+                        <TextBlock Text="(Wymagane, aby zachować zmiany po restarcie)" FontSize="10" HorizontalAlignment="Center" Margin="5"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

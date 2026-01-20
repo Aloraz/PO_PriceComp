@@ -1,0 +1,324 @@
+[
+  {
+    "Product": {
+      "Name": "Nap\u00F3j Coca-Cola 2L",
+      "Quantity": 2.0,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 8.50,
+    "PromoPrice": 6.49,
+    "PromoDescription": "Przy zakupie 4-paku",
+    "UnitPrice": 4.25,
+    "TotalPrice": 8.50
+  },
+  {
+    "Product": {
+      "Name": "Nap\u00F3j Coca-Cola 2L",
+      "Quantity": 2.0,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Lidl"
+    },
+    "Price": 8.50,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 4.25,
+    "TotalPrice": 8.50
+  },
+  {
+    "Product": {
+      "Name": "Nap\u00F3j Pepsi Max 2L",
+      "Quantity": 2.0,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Lidl"
+    },
+    "Price": 6.99,
+    "PromoPrice": 5.50,
+    "PromoDescription": "Super Cena!",
+    "UnitPrice": 3.495,
+    "TotalPrice": 6.99
+  },
+  {
+    "Product": {
+      "Name": "Nap\u00F3j Coca-Cola 0.5L (Ma\u0142a)",
+      "Quantity": 0.5,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "\u017Babka"
+    },
+    "Price": 4.50,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 9.0,
+    "TotalPrice": 4.50
+  },
+  {
+    "Product": {
+      "Name": "Nap\u00F3j Coca-Cola 0.5L (Ma\u0142a)",
+      "Quantity": 0.5,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "\u017Babka"
+    },
+    "Price": 4.50,
+    "PromoPrice": 3.50,
+    "PromoDescription": "2 szt. z aplikacj\u0105",
+    "UnitPrice": 9.0,
+    "TotalPrice": 4.50
+  },
+  {
+    "Product": {
+      "Name": "Nap\u00F3j Coca-Cola 1L",
+      "Quantity": 1.0,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Auchan"
+    },
+    "Price": 5.99,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 5.99,
+    "TotalPrice": 5.99
+  },
+  {
+    "Product": {
+      "Name": "Mas\u0142o Extra 82%",
+      "Quantity": 0.2,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 7.00,
+    "PromoPrice": 5.25,
+    "PromoDescription": "3\u002B1 Gratis",
+    "UnitPrice": 35.0,
+    "TotalPrice": 7.00
+  },
+  {
+    "Product": {
+      "Name": "Mas\u0142o Extra 82%",
+      "Quantity": 0.2,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Lidl"
+    },
+    "Price": 6.50,
+    "PromoPrice": 4.49,
+    "PromoDescription": "Przy zakupie 3 szt.",
+    "UnitPrice": 32.5,
+    "TotalPrice": 6.50
+  },
+  {
+    "Product": {
+      "Name": "Mas\u0142o Extra 82%",
+      "Quantity": 0.2,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "online",
+      "DeliveryCost": 12.99,
+      "Name": "Allegro"
+    },
+    "Price": 4.00,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 20.0,
+    "TotalPrice": 16.99
+  },
+  {
+    "Product": {
+      "Name": "Proszek Persil Color (Ma\u0142y)",
+      "Quantity": 1.5,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "\u017Babka"
+    },
+    "Price": 25.00,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 16.666666666666666666666666667,
+    "TotalPrice": 25.00
+  },
+  {
+    "Product": {
+      "Name": "Proszek Persil Color (XXL)",
+      "Quantity": 5.0,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Auchan"
+    },
+    "Price": 60.00,
+    "PromoPrice": 49.99,
+    "PromoDescription": "MEGA PAKA",
+    "UnitPrice": 12.0,
+    "TotalPrice": 60.00
+  },
+  {
+    "Product": {
+      "Name": "Proszek Persil Color (XXL)",
+      "Quantity": 5.0,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "online",
+      "DeliveryCost": 12.99,
+      "Name": "Allegro"
+    },
+    "Price": 45.00,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 9.0,
+    "TotalPrice": 57.99
+  },
+  {
+    "Product": {
+      "Name": "Chipsy Lay\u0027s Solone (Du\u017Ce)",
+      "Quantity": 0.200,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 8.00,
+    "PromoPrice": 5.99,
+    "PromoDescription": "Drugi produkt -50%",
+    "UnitPrice": 40,
+    "TotalPrice": 8.00
+  },
+  {
+    "Product": {
+      "Name": "Chipsy Lay\u0027s Solone (Ma\u0142e)",
+      "Quantity": 0.080,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 4.50,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 56.25,
+    "TotalPrice": 4.50
+  },
+  {
+    "Product": {
+      "Name": "Chipsy Lay\u0027s Solone (Du\u017Ce)",
+      "Quantity": 0.200,
+      "UnitName": "kg"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Lidl"
+    },
+    "Price": 7.50,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 37.5,
+    "TotalPrice": 7.50
+  },
+  {
+    "Product": {
+      "Name": "Woda \u0179r\u00F3dlana \u017Bywiec",
+      "Quantity": 1.5,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 1.89,
+    "PromoPrice": 1.49,
+    "PromoDescription": "6-pak",
+    "UnitPrice": 1.26,
+    "TotalPrice": 1.89
+  },
+  {
+    "Product": {
+      "Name": "Woda \u0179r\u00F3dlana \u017Bywiec",
+      "Quantity": 1.5,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Lidl"
+    },
+    "Price": 1.79,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 1.1933333333333333333333333333,
+    "TotalPrice": 1.79
+  },
+  {
+    "Product": {
+      "Name": "Mleko \u0141aciate 3.2%",
+      "Quantity": 1.0,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 3.20,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 3.2,
+    "TotalPrice": 3.20
+  },
+  {
+    "Product": {
+      "Name": "Mleko \u0141aciate 3.2%",
+      "Quantity": 1.0,
+      "UnitName": "l"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Lidl"
+    },
+    "Price": 3.20,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 3.2,
+    "TotalPrice": 3.20
+  },
+  {
+    "Product": {
+      "Name": "Kakao",
+      "Quantity": 200,
+      "UnitName": "g"
+    },
+    "Store": {
+      "$type": "local",
+      "Name": "Biedronka"
+    },
+    "Price": 15,
+    "PromoPrice": null,
+    "PromoDescription": null,
+    "UnitPrice": 0.075,
+    "TotalPrice": 15
+  }
+]
