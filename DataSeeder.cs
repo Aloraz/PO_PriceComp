@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using projektPO.projektPO; // Upewnij się, że namespace pasuje do Twojego projektu
+using projektPO.projektPO;
 
 namespace projektPO
 {
@@ -12,14 +12,13 @@ namespace projektPO
             {
                 Console.WriteLine("[INFO] Generowanie dużej bazy danych...");
 
-                // 1. TWORZENIE SKLEPÓW
+                //  SKLEPY
                 var biedronka = new LocalStore("Biedronka");
                 var lidl = new LocalStore("Lidl");
                 var zabka = new LocalStore("Żabka");
                 var auchan = new LocalStore("Auchan");
-                var allegro = new OnlineStore("Allegro", 12.99m); // Sklep online z dostawą!
+                var allegro = new OnlineStore("Allegro", 12.99m);
 
-                // 2. TWORZENIE PRODUKTÓW (Różne warianty i gramatury)
 
                 // --- NAPOJE ---
                 var cola2L = new Product("Napój Coca-Cola 2L", 2.0m, "l");
@@ -32,8 +31,7 @@ namespace projektPO
                 var maslo = new Product("Masło Extra 82%", 0.2m, "kg"); // 200g to 0.2kg
                 var mleko = new Product("Mleko Łaciate 3.2%", 1.0m, "l");
 
-                // --- CHEMIA (Testowanie cen jednostkowych!) ---
-                // Mała paczka (drogo za kg), Duża paczka (tanio za kg)
+                // --- CHEMIA 
                 var persilMaly = new Product("Proszek Persil Color (Mały)", 1.5m, "kg");
                 var persilXXL = new Product("Proszek Persil Color (XXL)", 5.0m, "kg");
 
@@ -42,7 +40,7 @@ namespace projektPO
                 var chipsyMale = new Product("Chipsy Lay's Solone (Małe)", 0.080m, "kg"); // 80g
 
                 // ============================================================
-                // 3. TWORZENIE OFERT (Ceny, Promocje, Pułapki)
+                // TWORZENIE OFERT (Ceny, Promocje, Pułapki)
                 // ============================================================
 
                 // --- SCENARIUSZ 1: COCA-COLA (Warianty) ---
