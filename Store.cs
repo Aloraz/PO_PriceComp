@@ -9,7 +9,7 @@ namespace projektPO
 {
     [JsonDerivedType(typeof(LocalStore), typeDiscriminator: "local")]
     [JsonDerivedType(typeof(OnlineStore), typeDiscriminator: "online")]
-    public abstract class Store
+    public abstract class Store : IEquatable<Store>
     {
         private string _name;
 
@@ -30,5 +30,17 @@ namespace projektPO
         }
 
         public abstract decimal GetAdditionalCost();
+
+        public bool Equals(Store other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (GetType() != other.GetType()) return false;
+            return Name == other.Name;
+        }
+
+        public override bool Equals(object obj) => Equals(obj as Store);
+
+        public override int GetHashCode() => (Name, GetType()).GetHashCode();
     }
 }

@@ -30,5 +30,17 @@ namespace projektPO
         {
             return DeliveryCost;
         }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj) && 
+                   obj is OnlineStore other && 
+                   DeliveryCost == other.DeliveryCost;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), DeliveryCost);
+        }
     }
 }
