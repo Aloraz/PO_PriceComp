@@ -63,11 +63,43 @@ namespace projektPO
 
             Console.WriteLine("\n--- RANKING SKLEPÓW ---");
 
-            // Użycie nowej logiki
-            var ranking = ShoppingLogic.CalculateBasket(allOffers, myNeed);
+            var nazwySklepow = allOffers.Select(o => o.Store).Distinct().ToList();
+            var ranking = new List<dynamic>();
 
-            var sklepyKompletne = ranking.Where(r => r.MissingProducts.Count == 0).ToList();
-            var sklepyNiekompletne = ranking.Where(r => r.MissingProducts.Count > 0).ToList();
+            foreach (var sklep in nazwySklepow)
+            {
+                decimal sumaParagonu = 0;
+                decimal kosztyDodatkowe = sklep.GetAdditionalCost();
+                List<string> braki = new List<string>();
+
+                foreach (var poszukiwanyProdukt in myNeed)
+                {
+                    var ofertyWSklepie = allOffers
+                        .Where(o => o.Store == sklep && o.Product.Name.Contains(poszukiwanyProdukt, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+
+                    if (ofertyWSklepie.Any())
+                    {
+                        var najtanszaOpcja = ofertyWSklepie.OrderBy(o => o.Price).First();
+                        sumaParagonu += najtanszaOpcja.Price;
+                    }
+                    else
+                    {
+                        braki.Add(poszukiwanyProdukt);
+                    }
+                }
+
+                ranking.Add(new
+                {
+                    Sklep = sklep,
+                    Suma = sumaParagonu + kosztyDodatkowe,
+                    Braki = braki,
+                    KosztDostawy = kosztyDodatkowe
+                });
+            }
+
+            var sklepyKompletne = ranking.Where(r => r.Braki.Count == 0).OrderBy(r => r.Suma).ToList();
+            var sklepyNiekompletne = ranking.Where(r => r.Braki.Count > 0).ToList();
 
             if (sklepyKompletne.Count == 0)
             {
@@ -78,12 +110,12 @@ namespace projektPO
                 int miejsce = 1;
                 foreach (var wynik in sklepyKompletne)
                 {
-                    Console.WriteLine($"\nMIEJSCE {miejsce}: {wynik.Store.Name}");
-                    Console.WriteLine($"  Produkty: {wynik.Sum - wynik.DeliveryCost:F2} zł");
-                    if (wynik.DeliveryCost > 0) Console.WriteLine($"  + Dostawa: {wynik.DeliveryCost:F2} zł");
+                    Console.WriteLine($"\nMIEJSCE {miejsce}: {wynik.Sklep.Name}");
+                    Console.WriteLine($"  Produkty: {wynik.Suma - wynik.KosztDostawy:F2} zł");
+                    if (wynik.KosztDostawy > 0) Console.WriteLine($"  + Dostawa: {wynik.KosztDostawy:F2} zł");
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"  RAZEM: {wynik.Sum:F2} zł");
+                    Console.WriteLine($"  RAZEM: {wynik.Suma:F2} zł");
                     Console.ResetColor();
                     miejsce++;
                 }
@@ -94,7 +126,7 @@ namespace projektPO
                 Console.WriteLine("\n--- BRAKI W INNYCH SKLEPACH ---");
                 foreach (var wynik in sklepyNiekompletne)
                 {
-                    Console.WriteLine($"{wynik.Store.Name}: Brakuje [{string.Join(", ", wynik.MissingProducts)}]");
+                    Console.WriteLine($"{wynik.Sklep.Name}: Brakuje [{string.Join(", ", wynik.Braki)}]");
                 }
             }
             Console.WriteLine("\nNaciśnij dowolny klawisz...");
@@ -106,8 +138,10 @@ namespace projektPO
             Console.Write("\n\nJaki produkt Cię interesuje? (np. Cola, Chipsy): ");
             string szukanaNazwa = Console.ReadLine();
 
-            
-            var pasujaceOferty = ShoppingLogic.FindDeals(offers, szukanaNazwa);
+            var pasujaceOferty = offers
+                .Where(o => o.Product.Name.Contains(szukanaNazwa, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(o => o.UnitPrice) 
+                .ToList();
 
             if (pasujaceOferty.Count == 0)
             {
