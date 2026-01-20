@@ -10,7 +10,7 @@ namespace projektPO
 
     namespace projektPO
     {
-        public class Product
+        public class Product : IEquatable<Product>, ICloneable
         {
             private string _name;
 
@@ -36,6 +36,18 @@ namespace projektPO
                 if (quantity <= 0) throw new ArgumentException("Ilość musi być dodatnia");
                 Quantity = quantity;
                 UnitName = unitName;
+            }
+            public bool Equals(Product other)
+            {
+                if (other == null) return false;
+                return Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase) &&
+                       Quantity == other.Quantity &&
+                       UnitName == other.UnitName;
+            }
+            public override int GetHashCode() => (Name?.ToLower(), Quantity, UnitName).GetHashCode();
+            public object Clone()
+            {
+                return new Product(this.Name, this.Quantity, this.UnitName);
             }
         }
     }

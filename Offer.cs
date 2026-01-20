@@ -7,7 +7,7 @@ using projektPO.projektPO;
 
 namespace projektPO
 {
-    public class Offer : IPriceable
+    public class Offer : IPriceable, IComparable<Offer>
     {
         private decimal _price;
         public Product Product { get; private set; }
@@ -40,6 +40,12 @@ namespace projektPO
         }
 
         public decimal TotalPrice => Price + Store.GetAdditionalCost();
+
+        public int CompareTo(Offer other)
+        {
+            if (other == null) return 1;
+            return this.TotalPrice.CompareTo(other.TotalPrice);
+        }
     }
     public class InvalidPriceException : Exception
     {
