@@ -29,7 +29,6 @@ namespace projektPO
             Name = name;
         }
 
-        // metoda abstrakcyjna – polimorfizm
         public abstract decimal GetAdditionalCost();
     }
 }
