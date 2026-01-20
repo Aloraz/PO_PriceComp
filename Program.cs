@@ -9,151 +9,193 @@ namespace projektPO
     {
         static void Main(string[] args)
         {
+            // 1. Wczytanie danych
             List<Offer> allOffers = DataManager.LoadOffers();
 
+            // 2. Inicjalizacja bazy (jeśli pusta)
+            // WAŻNE: Usuń stary plik oferty.json, jeśli chcesz zobaczyć nowe dane!
             if (allOffers.Count == 0)
             {
-                SeedData(allOffers);
+                // Delegujemy zadanie do nowej klasy DataSeeder
+                DataSeeder.Initialize(allOffers);
             }
 
-            List<string> myShoppingList = new List<string>();
+            // 3. Pętla menu (UI)
             bool running = true;
-
             while (running)
             {
                 Console.Clear();
-                Console.WriteLine("=== ASYSTENT ZAKUPOWY v2 (Analiza Opłacalności zł/kg) ===");
-                Console.WriteLine($"Twój koszyk: [{string.Join(", ", myShoppingList)}]");
-                Console.WriteLine("--------------------------------------");
-                Console.WriteLine("1. Dodaj produkt do listy (np. Kurczak)");
-                Console.WriteLine("2. Wyczyść listę");
-                Console.WriteLine("3. OBLICZ GDZIE NAJTANIEJ (Smart Unit Price)");
-                Console.WriteLine("4. Pokaż bazę ofert");
-                Console.WriteLine("5. Zapisz i Wyjdź");
-                Console.Write("Wybór: ");
+                Console.WriteLine("=== ASYSTENT ZAKUPOWY 2.0 (Clean Code) ===");
+                Console.WriteLine("1. Pokaż wszystkie oferty");
+                Console.WriteLine("2. SPRAWDŹ OKAZJE DLA PRODUKTU (Tabela)");
+                Console.WriteLine("3. OBLICZ KOSZYK (Gdzie najtaniej za wszystko?)");
+                Console.WriteLine("4. Zapisz i Wyjdź");
+                Console.WriteLine("5. DODAJ NOWĄ OFERTĘ (Ręcznie)");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("6. RESET BAZY DANYCH");
+                Console.ResetColor();
+                Console.Write("\nWybór: ");
 
                 var key = Console.ReadKey();
-
                 switch (key.KeyChar)
                 {
-                    case '1': DodajProduktDoListy(allOffers, myShoppingList); break;
-                    case '2': myShoppingList.Clear(); break;
-                    case '3':
-                        PorownajSklepySmart(allOffers, myShoppingList);
-                        Console.ReadKey();
-                        break;
-                    case '4': PokazBaze(allOffers); Console.ReadKey(); break;
-                    case '5': DataManager.SaveOffers(allOffers); running = false; break;
+                    case '1': PokazBaze(allOffers); Console.ReadKey(); break;
+                    case '2': WyszukajOkazje(allOffers); break;
+                    case '3': ObliczKoszyk(allOffers); break;
+                    case '4': DataManager.SaveOffers(allOffers); running = false; break;
+                    case '5': DodajOferte(allOffers); break;
+                    case '6': ResetujBaze(allOffers); break;
                 }
             }
         }
 
-        static void PorownajSklepySmart(List<Offer> allOffers, List<string> myNeed)
+        // --- FUNKCJA 1: OBLICZANIE KOSZYKA ---
+        static void ObliczKoszyk(List<Offer> allOffers)
         {
-            if (myNeed.Count == 0) { Console.WriteLine("\nKoszyk pusty!"); return; }
+            List<string> myNeed = new List<string>();
+            Console.WriteLine("\n\n--- KREATOR LISTY ZAKUPÓW ---");
+            Console.WriteLine("Wpisuj produkty po kolei (np. Cola, Chipsy).");
+            Console.WriteLine("Wciśnij ENTER na pustym polu, aby zakończyć.");
 
-            Console.WriteLine("\n\n--- ANALIZA SMART (Szukamy najlepszej ceny za KG/L) ---");
+            while (true)
+            {
+                Console.Write("Dodaj produkt: ");
+                string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) break;
+                myNeed.Add(input);
+            }
+
+            if (myNeed.Count == 0) return;
+
+            Console.WriteLine("\n--- RANKING SKLEPÓW ---");
 
             var nazwySklepow = allOffers.Select(o => o.Store).Distinct().ToList();
             var ranking = new List<dynamic>();
 
             foreach (var sklep in nazwySklepow)
             {
-                decimal sumaDoZaplaty = 0;
+                decimal sumaParagonu = 0;
                 decimal kosztyDodatkowe = sklep.GetAdditionalCost();
-                bool czyMaWszystko = true;
-                List<string> szczegolyWyboru = new List<string>();
+                List<string> braki = new List<string>();
 
-                foreach (var poszukiwany in myNeed)
+                foreach (var poszukiwanyProdukt in myNeed)
                 {
                     var ofertyWSklepie = allOffers
-                        .Where(o => o.Store == sklep && o.Product.Name.Contains(poszukiwany))
+                        .Where(o => o.Store == sklep && o.Product.Name.Contains(poszukiwanyProdukt, StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
                     if (ofertyWSklepie.Any())
                     {
-
-                        var najlepszaOpcja = ofertyWSklepie.OrderBy(o => o.UnitPrice).First();
-
-                        sumaDoZaplaty += najlepszaOpcja.Price;
-
-                        szczegolyWyboru.Add(
-                            $"- {poszukiwany}: Wybrano '{najlepszaOpcja.Product.Name}' " +
-                            $"(Paczka: {najlepszaOpcja.Product.Quantity}{najlepszaOpcja.Product.UnitName}). " +
-                            $"Cena: {najlepszaOpcja.Price}zł -> WYCHODZI {najlepszaOpcja.UnitPrice:F2} zł/{najlepszaOpcja.Product.UnitName}"
-                        );
+                        var najtanszaOpcja = ofertyWSklepie.OrderBy(o => o.Price).First();
+                        sumaParagonu += najtanszaOpcja.Price;
                     }
                     else
                     {
-                        czyMaWszystko = false;
+                        braki.Add(poszukiwanyProdukt);
                     }
                 }
 
-                if (czyMaWszystko)
+                ranking.Add(new
                 {
-                    ranking.Add(new { Sklep = sklep, Suma = sumaDoZaplaty + kosztyDodatkowe, Detale = szczegolyWyboru });
-                }
+                    Sklep = sklep,
+                    Suma = sumaParagonu + kosztyDodatkowe,
+                    Braki = braki,
+                    KosztDostawy = kosztyDodatkowe
+                });
             }
 
-            // Wyświetlanie
-            var posortowanyRanking = ranking.OrderBy(r => r.Suma).ToList();
+            var sklepyKompletne = ranking.Where(r => r.Braki.Count == 0).OrderBy(r => r.Suma).ToList();
+            var sklepyNiekompletne = ranking.Where(r => r.Braki.Count > 0).ToList();
 
-            if (posortowanyRanking.Count == 0) Console.WriteLine("Brak sklepu z pełną ofertą.");
+            if (sklepyKompletne.Count == 0)
+            {
+                Console.WriteLine("Żaden sklep nie ma wszystkiego z listy!");
+            }
             else
             {
-                foreach (var wynik in posortowanyRanking)
+                int miejsce = 1;
+                foreach (var wynik in sklepyKompletne)
                 {
-                    Console.WriteLine($"\nSKLEP: {wynik.Sklep.Name}");
-                    foreach (string linia in wynik.Detale) Console.WriteLine("  " + linia);
+                    Console.WriteLine($"\nMIEJSCE {miejsce}: {wynik.Sklep.Name}");
+                    Console.WriteLine($"  Produkty: {wynik.Suma - wynik.KosztDostawy:F2} zł");
+                    if (wynik.KosztDostawy > 0) Console.WriteLine($"  + Dostawa: {wynik.KosztDostawy:F2} zł");
 
-                    decimal dostawa = wynik.Sklep.GetAdditionalCost();
-                    if (dostawa > 0) Console.WriteLine($"  + Dostawa: {dostawa} zł");
-
-                    Console.WriteLine($"  = RAZEM DO ZAPŁATY: {wynik.Suma:F2} zł");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"  RAZEM: {wynik.Suma:F2} zł");
+                    Console.ResetColor();
+                    miejsce++;
                 }
             }
-        }
 
-        static void SeedData(List<Offer> offers)
-        {
-            try
+            if (sklepyNiekompletne.Count > 0)
             {
-                var biedronka = new LocalStore("Biedronka");
-                var lidl = new LocalStore("Lidl");
-
-                // --- SCENARIUSZ: KURCZAK (XXL vs EKO) ---
-
-                // BIEDRONKA: Ma paczkę XXL. Cena przy kasie wysoka (25zł), ale waga duża (1.5kg).
-                // Cena jednostkowa: 16.66 zł/kg
-                var kurczakXXL = new Product("Kurczak XXL Pack", 1.5m, "kg");
-                offers.Add(new Offer(kurczakXXL, biedronka, 25.00m));
-
-                // BIEDRONKA: Ma też małą paczkę. Cena niska (12zł), ale waga mała (0.5kg).
-                // Cena jednostkowa: 24.00 zł/kg
-                var kurczakMaly = new Product("Kurczak Mały", 0.5m, "kg");
-                offers.Add(new Offer(kurczakMaly, biedronka, 12.00m));
-
-
-                // LIDL: Ma wersję Eko. Cena średnia (18zł), waga standard (0.8kg).
-                // Cena jednostkowa: 22.50 zł/kg
-                var kurczakEko = new Product("Kurczak Eko", 0.8m, "kg");
-                offers.Add(new Offer(kurczakEko, lidl, 18.00m));
-
-                // --- INNE PRODUKTY ---
-                var mleko = new Product("Mleko", 1.0m, "l");
-                offers.Add(new Offer(mleko, biedronka, 3.20m));
-                offers.Add(new Offer(mleko, lidl, 3.20m));
-
-                DataManager.SaveOffers(offers);
+                Console.WriteLine("\n--- BRAKI W INNYCH SKLEPACH ---");
+                foreach (var wynik in sklepyNiekompletne)
+                {
+                    Console.WriteLine($"{wynik.Sklep.Name}: Brakuje [{string.Join(", ", wynik.Braki)}]");
+                }
             }
-            catch (Exception ex) { Console.WriteLine("Błąd: " + ex.Message); }
+            Console.WriteLine("\nNaciśnij dowolny klawisz...");
+            Console.ReadKey();
         }
 
-        static void DodajProduktDoListy(List<Offer> offers, List<string> myList)
+        // --- FUNKCJA 2: TABELKA OKAZJI ---
+        static void WyszukajOkazje(List<Offer> offers)
         {
-            Console.Write("\nCo chcesz kupić? (np. Kurczak, Mleko): ");
-            string input = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(input)) myList.Add(input);
+            Console.Write("\n\nJaki produkt Cię interesuje? (np. Cola, Chipsy): ");
+            string szukanaNazwa = Console.ReadLine();
+
+            var pasujaceOferty = offers
+                .Where(o => o.Product.Name.Contains(szukanaNazwa, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(o => o.UnitPrice) // <--- ZMIANA: Sortujemy po opłacalności (cenie jednostkowej)!
+                .ToList();
+
+            if (pasujaceOferty.Count == 0)
+            {
+                Console.WriteLine("Nie znaleziono takiego produktu.");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine($"\n--- WYNIKI WYSZUKIWANIA: {szukanaNazwa.ToUpper()} ---");
+
+            // NAGŁÓWEK - Dostosowałem szerokości kolumn {0,-35} oznacza 35 znaków wyrównane do lewej
+            Console.WriteLine(
+                "{0,-35} | {1,-12} | {2,-10} | {3,-15} | {4,-12} | {5,-25}",
+                "PEŁNA NAZWA", "SKLEP", "CENA", "JEDNOSTKOWO", "PROMO", "WARUNEK");
+
+            Console.WriteLine(new string('-', 120)); // Dłuższa linia oddzielająca
+
+            foreach (var o in pasujaceOferty)
+            {
+                string nazwa = o.Product.Name;
+                // Jeśli nazwa jest za długa, ucinamy ją i dajemy "...", żeby nie rozwaliła tabeli
+                if (nazwa.Length > 32) nazwa = nazwa.Substring(0, 29) + "...";
+
+                string cenaStd = $"{o.Price} zł";
+
+                // Formatowanie ceny jednostkowej (np. "3.50 zł/kg")
+                string unitInfo = $"{o.UnitPrice:F2} zł/{o.Product.UnitName}";
+
+                string cenaPromo = o.PromoPrice.HasValue ? $"{o.PromoPrice} zł" : "";
+                string opisPromo = o.PromoDescription ?? "";
+
+                // Kolorowanie wiersza jeśli jest promocja
+                if (o.PromoPrice.HasValue) Console.ForegroundColor = ConsoleColor.Green;
+
+                Console.WriteLine(
+                    "{0,-35} | {1,-12} | {2,-10} | {3,-15} | {4,-12} | {5,-25}",
+                    nazwa,
+                    o.Store.Name,
+                    cenaStd,
+                    unitInfo, // Tutaj wyświetlamy prawdę o cenie
+                    cenaPromo,
+                    opisPromo);
+
+                Console.ResetColor();
+            }
+            Console.WriteLine(new string('-', 120));
+            Console.ReadKey();
         }
 
         static void PokazBaze(List<Offer> offers)
@@ -161,10 +203,110 @@ namespace projektPO
             Console.WriteLine("\n--- BAZA OFERT ---");
             foreach (var o in offers)
             {
-                Console.WriteLine($"{o.Product.Name} ({o.Product.Quantity}{o.Product.UnitName}) " +
-                                  $"w {o.Store.Name}: {o.Price} zł " +
-                                  $"[Jednostkowo: {o.UnitPrice:F2} zł/{o.Product.UnitName}]");
+                Console.WriteLine($"{o.Product.Name} w {o.Store.Name}: {o.Price} zł");
             }
+        }
+
+        static void ResetujBaze(List<Offer> offers)
+        {
+            Console.Write("\n\nCzy na pewno chcesz usunąć bazę i przywrócić dane testowe? (t/n): ");
+            var decyzja = Console.ReadKey().KeyChar;
+
+            if (decyzja == 't' || decyzja == 'T')
+            {
+                try
+                {
+                    // 1. Usuwamy plik fizyczny
+                    string sciezka = "oferty.json"; // Musi być taka sama jak w DataManager
+                    if (File.Exists(sciezka))
+                    {
+                        File.Delete(sciezka);
+                        Console.WriteLine($"\n[INFO] Plik {sciezka} został usunięty.");
+                    }
+
+                    // 2. Czyścimy pamięć programu
+                    offers.Clear();
+
+                    // 3. Generujemy nowe dane
+                    DataSeeder.Initialize(offers);
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\n[SUKCES] Baza została zresetowana do ustawień początkowych!");
+                    Console.ResetColor();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n[BŁĄD] Nie udało się zresetować bazy: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nAnulowano.");
+            }
+            Console.ReadKey();
+        }
+
+        static void DodajOferte(List<Offer> offers)
+        {
+            Console.WriteLine("\n\n--- DODAWANIE NOWEJ OFERTY ---");
+
+            // 1. Wybór sklepu (z istniejących, żeby nie robić literówek)
+            // Pobieramy unikalne sklepy z listy, żeby użytkownik mógł wybrać
+            var dostepneSklepy = offers.Select(o => o.Store).Distinct().ToList();
+
+            Console.WriteLine("Wybierz sklep:");
+            for (int i = 0; i < dostepneSklepy.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {dostepneSklepy[i].Name}");
+            }
+
+            Console.Write("Numer sklepu: ");
+            if (!int.TryParse(Console.ReadLine(), out int sklepIndex) || sklepIndex < 1 || sklepIndex > dostepneSklepy.Count)
+            {
+                Console.WriteLine("Niepoprawny wybór sklepu!");
+                Console.ReadKey();
+                return;
+            }
+            var wybranySklep = dostepneSklepy[sklepIndex - 1];
+
+            // 2. Dane produktu
+            Console.Write("Nazwa produktu (np. Chleb): ");
+            string nazwa = Console.ReadLine();
+
+            Console.Write("Cena (np. 4,50): ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal cena))
+            {
+                Console.WriteLine("To nie jest liczba!");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("Ilość/Waga w opakowaniu (np. 1 dla sztuki, 0,5 dla 500g): ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal ilosc)) ilosc = 1.0m;
+
+            Console.Write("Jednostka (szt, kg, l): ");
+            string jednostka = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(jednostka)) jednostka = "szt";
+
+            // 3. Tworzenie obiektów
+            try
+            {
+                var nowyProdukt = new Product(nazwa, ilosc, jednostka);
+                var nowaOferta = new Offer(nowyProdukt, wybranySklep, cena);
+
+                // 4. Dodanie do listy
+                offers.Add(nowaOferta);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n[SUKCES] Oferta dodana! Pamiętaj zapisać zmiany przy wyjściu (Opcja 4).");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Błąd: {ex.Message}");
+            }
+
+            Console.ReadKey();
         }
     }
 }

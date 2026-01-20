@@ -23,13 +23,20 @@ namespace projektPO
             }
         }
 
+        public decimal? PromoPrice { get; private set; } 
+        public string PromoDescription { get; private set; }
+
         public decimal UnitPrice => Price / Product.Quantity;
 
-        public Offer(Product product, Store store, decimal price)
+        public Offer(Product product, Store store, decimal price,
+                     decimal? promoPrice = null, string promoDesc = null)
         {
             Product = product ?? throw new ArgumentNullException(nameof(product));
             Store = store ?? throw new ArgumentNullException(nameof(store));
             Price = price;
+
+            PromoPrice = promoPrice;
+            PromoDescription = promoDesc;
         }
 
         public decimal TotalPrice => Price + Store.GetAdditionalCost();
