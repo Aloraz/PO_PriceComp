@@ -9,18 +9,13 @@ namespace projektPO
     {
         static void Main(string[] args)
         {
-            // 1. Wczytanie danych
             List<Offer> allOffers = DataManager.LoadOffers();
 
-            // 2. Inicjalizacja bazy (jeśli pusta)
-            // WAŻNE: Usuń stary plik oferty.json, jeśli chcesz zobaczyć nowe dane!
             if (allOffers.Count == 0)
             {
-                // Delegujemy zadanie do nowej klasy DataSeeder
                 DataSeeder.Initialize(allOffers);
             }
 
-            // 3. Pętla menu (UI)
             bool running = true;
             while (running)
             {
@@ -49,7 +44,6 @@ namespace projektPO
             }
         }
 
-        // --- FUNKCJA 1: OBLICZANIE KOSZYKA ---
         static void ObliczKoszyk(List<Offer> allOffers)
         {
             List<string> myNeed = new List<string>();
@@ -139,7 +133,6 @@ namespace projektPO
             Console.ReadKey();
         }
 
-        // --- FUNKCJA 2: TABELKA OKAZJI ---
         static void WyszukajOkazje(List<Offer> offers)
         {
             Console.Write("\n\nJaki produkt Cię interesuje? (np. Cola, Chipsy): ");
@@ -147,7 +140,7 @@ namespace projektPO
 
             var pasujaceOferty = offers
                 .Where(o => o.Product.Name.Contains(szukanaNazwa, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(o => o.UnitPrice) // <--- ZMIANA: Sortujemy po opłacalności (cenie jednostkowej)!
+                .OrderBy(o => o.UnitPrice) 
                 .ToList();
 
             if (pasujaceOferty.Count == 0)
@@ -159,28 +152,24 @@ namespace projektPO
 
             Console.WriteLine($"\n--- WYNIKI WYSZUKIWANIA: {szukanaNazwa.ToUpper()} ---");
 
-            // NAGŁÓWEK - Dostosowałem szerokości kolumn {0,-35} oznacza 35 znaków wyrównane do lewej
             Console.WriteLine(
                 "{0,-35} | {1,-12} | {2,-10} | {3,-15} | {4,-12} | {5,-25}",
                 "PEŁNA NAZWA", "SKLEP", "CENA", "JEDNOSTKOWO", "PROMO", "WARUNEK");
 
-            Console.WriteLine(new string('-', 120)); // Dłuższa linia oddzielająca
+            Console.WriteLine(new string('-', 120)); 
 
             foreach (var o in pasujaceOferty)
             {
                 string nazwa = o.Product.Name;
-                // Jeśli nazwa jest za długa, ucinamy ją i dajemy "...", żeby nie rozwaliła tabeli
                 if (nazwa.Length > 32) nazwa = nazwa.Substring(0, 29) + "...";
 
                 string cenaStd = $"{o.Price} zł";
 
-                // Formatowanie ceny jednostkowej (np. "3.50 zł/kg")
                 string unitInfo = $"{o.UnitPrice:F2} zł/{o.Product.UnitName}";
 
                 string cenaPromo = o.PromoPrice.HasValue ? $"{o.PromoPrice} zł" : "";
                 string opisPromo = o.PromoDescription ?? "";
 
-                // Kolorowanie wiersza jeśli jest promocja
                 if (o.PromoPrice.HasValue) Console.ForegroundColor = ConsoleColor.Green;
 
                 Console.WriteLine(
@@ -188,7 +177,7 @@ namespace projektPO
                     nazwa,
                     o.Store.Name,
                     cenaStd,
-                    unitInfo, // Tutaj wyświetlamy prawdę o cenie
+                    unitInfo, 
                     cenaPromo,
                     opisPromo);
 
@@ -217,7 +206,7 @@ namespace projektPO
                 try
                 {
                     // 1. Usuwamy plik fizyczny
-                    string sciezka = "oferty.json"; // Musi być taka sama jak w DataManager
+                    string sciezka = "oferty.json"; 
                     if (File.Exists(sciezka))
                     {
                         File.Delete(sciezka);
@@ -250,7 +239,7 @@ namespace projektPO
         {
             Console.WriteLine("\n\n--- DODAWANIE NOWEJ OFERTY ---");
 
-            // 1. Wybór sklepu (z istniejących, żeby nie robić literówek)
+            // 1. Wybór sklepu (z istniejących)
             // Pobieramy unikalne sklepy z listy, żeby użytkownik mógł wybrać
             var dostepneSklepy = offers.Select(o => o.Store).Distinct().ToList();
 
