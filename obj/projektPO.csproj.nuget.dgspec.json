@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HP\\Documents\\3sem\\projekt\\projektPO.csproj": {}
+    "C:\\Users\\HP\\Documents\\3sem\\PO_PriceComp\\projektPO.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HP\\Documents\\3sem\\projekt\\projektPO.csproj": {
+    "C:\\Users\\HP\\Documents\\3sem\\PO_PriceComp\\projektPO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HP\\Documents\\3sem\\projekt\\projektPO.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Documents\\3sem\\PO_PriceComp\\projektPO.csproj",
         "projectName": "projektPO",
-        "projectPath": "C:\\Users\\HP\\Documents\\3sem\\projekt\\projektPO.csproj",
+        "projectPath": "C:\\Users\\HP\\Documents\\3sem\\PO_PriceComp\\projektPO.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HP\\Documents\\3sem\\projekt\\obj\\",
+        "outputPath": "C:\\Users\\HP\\Documents\\3sem\\PO_PriceComp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

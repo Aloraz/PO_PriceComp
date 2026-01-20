@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using projektPO;
-using projektPO.projektPO;
+
 using System.IO;
 
 namespace PriceComp.GUI;

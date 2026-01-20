@@ -8,8 +8,7 @@ namespace projektPO
 {
     using System;
 
-    namespace projektPO
-    {
+    
         public class Product : IEquatable<Product>, ICloneable
         {
             private string _name;
@@ -50,5 +49,5 @@ namespace projektPO
                 return new Product(this.Name, this.Quantity, this.UnitName);
             }
         }
-    }
+    
 }

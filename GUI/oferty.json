@@ -304,21 +304,5 @@
     "PromoDescription": null,
     "UnitPrice": 3.2,
     "TotalPrice": 3.20
-  },
-  {
-    "Product": {
-      "Name": "Kakao",
-      "Quantity": 200,
-      "UnitName": "g"
-    },
-    "Store": {
-      "$type": "local",
-      "Name": "Biedronka"
-    },
-    "Price": 15,
-    "PromoPrice": null,
-    "PromoDescription": null,
-    "UnitPrice": 0.075,
-    "TotalPrice": 15
   }
 ]

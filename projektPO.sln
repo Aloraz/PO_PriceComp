@@ -7,23 +7,62 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "projektPO", "projektPO.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testy", "..\Testy\Testy.csproj", "{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{9824AA2D-9169-1FBC-8A83-7227C72EA239}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceComp.GUI", "GUI\PriceComp.GUI.csproj", "{CEF406E1-89F4-4C23-A4D6-20D40F142669}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{79968389-AE70-473E-A739-CB9A69B8D49A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79968389-AE70-473E-A739-CB9A69B8D49A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Debug|x64.Build.0 = Debug|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Debug|x86.Build.0 = Debug|Any CPU
 		{79968389-AE70-473E-A739-CB9A69B8D49A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79968389-AE70-473E-A739-CB9A69B8D49A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Release|x64.ActiveCfg = Release|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Release|x64.Build.0 = Release|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Release|x86.ActiveCfg = Release|Any CPU
+		{79968389-AE70-473E-A739-CB9A69B8D49A}.Release|x86.Build.0 = Release|Any CPU
 		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Debug|x64.Build.0 = Debug|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Debug|x86.Build.0 = Debug|Any CPU
 		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Release|x64.ActiveCfg = Release|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Release|x64.Build.0 = Release|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Release|x86.ActiveCfg = Release|Any CPU
+		{EB3E4602-5DEA-4E4B-BD3A-0A61C1B22143}.Release|x86.Build.0 = Release|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Debug|x64.Build.0 = Debug|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Debug|x86.Build.0 = Debug|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Release|x64.ActiveCfg = Release|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Release|x64.Build.0 = Release|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Release|x86.ActiveCfg = Release|Any CPU
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CEF406E1-89F4-4C23-A4D6-20D40F142669} = {9824AA2D-9169-1FBC-8A83-7227C72EA239}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {22B197B3-1F84-435A-B6B5-64CE87F8CEDA}
