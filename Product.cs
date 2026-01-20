@@ -6,24 +6,37 @@ using System.Threading.Tasks;
 
 namespace projektPO
 {
-    public class Product
+    using System;
+
+    namespace projektPO
     {
-        private string _name;
-
-        public string Name
+        public class Product
         {
-            get => _name;
-            private set
+            private string _name;
+
+            public string Name
             {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Nazwa produktu nie może być pusta.");
-                _name = value;
+                get => _name;
+                private set
+                {
+                    if (string.IsNullOrWhiteSpace(value))
+                        throw new ArgumentException("Nazwa produktu nie może być pusta.");
+                    _name = value;
+                }
             }
-        }
 
-        public Product(string name)
-        {
-            Name = name;
+            public decimal Quantity { get; private set; }
+
+            public string UnitName { get; private set; }
+
+            public Product(string name, decimal quantity = 1.0m, string unitName = "szt/kg")
+            {
+                Name = name;
+
+                if (quantity <= 0) throw new ArgumentException("Ilość musi być dodatnia");
+                Quantity = quantity;
+                UnitName = unitName;
+            }
         }
     }
 }
