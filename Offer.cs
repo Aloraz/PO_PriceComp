@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using projektPO.projektPO;
 
 namespace projektPO
 {
     public class Offer : IPriceable
     {
         private decimal _price;
-
         public Product Product { get; private set; }
         public Store Store { get; private set; }
 
@@ -18,11 +18,12 @@ namespace projektPO
             get => _price;
             private set
             {
-                if (value <= 0)
-                    throw new InvalidPriceException("Cena musi być większa od zera.");
+                if (value <= 0) throw new InvalidPriceException("Cena musi być większa od zera.");
                 _price = value;
             }
         }
+
+        public decimal UnitPrice => Price / Product.Quantity;
 
         public Offer(Product product, Store store, decimal price)
         {
@@ -37,6 +38,7 @@ namespace projektPO
     {
         public InvalidPriceException(string message) : base(message) { }
     }
+
     public interface IPriceable
     {
         decimal TotalPrice { get; }
