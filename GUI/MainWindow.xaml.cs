@@ -26,53 +26,37 @@ public partial class MainWindow : Window
 
     private void LoadData()
     {
-        // DataManager szuka "oferty.json". 
-        // W GUI musimy upewnić się, że patrzymy w dobre miejsce.
-        // Dla uproszczenia ustawimy CurrentDirectory tam gdzie jest plik (o jeden poziom wyżej niż bin/Debug/net8.0-windows)
-        // A najprościej: po prostu załadujmy i zobaczmy.
-        // Jeśli plik jest w głównym folderze projektu (..), to skopiujmy go tu dla testu, albo wskażmy ścieżkę.
-        
         _allOffers = DataManager.LoadOffers();
         
-        // AUTO-SEEDER: Jeśli brak danych (lub pusta lista), wygeneruj je używając logiki projektu
         if (_allOffers.Count == 0)
         {
-             // Wywołujemy metodę Initialize z głównego projektu (linkowaną)
              projektPO.DataSeeder.Initialize(_allOffers);
-             
-             // Opcjonalnie zapisujemy, by przy kolejnym uruchomieniu plik już był
-             // DataManager.SaveOffers(_allOffers); // zakomentowane, by nie śmiecić w katalogu bin GUI bez potrzeby, lub odkomentuj jeśli chcesz trwałości
         }
 
-        GridOffers.ItemsSource = _allOffers;
+        UpdateGrid();
+        UpdateProductsList();
+        UpdateStoresCombo();
         
-        // Lista unikalnych produktów do podpowiedzi dla użytkownika (Tab 2)
-        var products = _allOffers.Select(o => o.Product.Name).Distinct().OrderBy(n => n).ToList();
-        if (ListProducts != null) 
-        {
-            ListProducts.ItemsSource = products;
-        }
-
         if (_allOffers.Count == 0)
         {
              MessageBox.Show("Nie udało się wygenerować danych.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        
-        UpdateStoresCombo();
     }
+
+    private void UpdateProductsList()
+    {
+        if (ListProducts == null) return;
+        var products = _allOffers.Select(o => o.Product.Name).Distinct().OrderBy(n => n).ToList();
+        ListProducts.ItemsSource = products;
+    }
+
 
     private void UpdateStoresCombo()
     {
         if (ComboStores == null) return;
-        // Pobieramy unikalne obiekty sklepów (dzięki Equals działa Distinct)
         var stores = _allOffers.Select(o => o.Store).Distinct().ToList();
         ComboStores.ItemsSource = stores;
         if (stores.Count > 0) ComboStores.SelectedIndex = 0;
-    }
-
-    private void BtnLoad_Click(object sender, RoutedEventArgs e)
-    {
-        LoadData();
     }
 
     private void BtnCalculate_Click(object sender, RoutedEventArgs e)
@@ -84,7 +68,6 @@ public partial class MainWindow : Window
             return;
         }
 
-        // Rozdzielanie po przecinku lub nowej linii
         var shoppingList = input.Split(new[] { ',', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
                                 .Select(s => s.Trim())
                                 .Where(s => !string.IsNullOrEmpty(s))
@@ -109,7 +92,6 @@ public partial class MainWindow : Window
             }
             else
             {
-                // Sprawdź czy ostatni znak to przecinek, jeśli nie to dodaj
                 if (!currentText.EndsWith(","))
                 {
                     currentText += ", ";
@@ -143,15 +125,11 @@ public partial class MainWindow : Window
 
             _allOffers.Add(offer);
 
-            // Odśwież widoki
-            GridOffers.Items.Refresh(); // lub Reset Bindings
-            // Odśwież listę produktów
-            var products = _allOffers.Select(o => o.Product.Name).Distinct().OrderBy(n => n).ToList();
-            ListProducts.ItemsSource = products;
+            UpdateGrid();
+            UpdateProductsList();
 
-            MessageBox.Show("Dodano nową ofertę!", "Sukces");
+            MessageBox.Show("Dodano nową ofertę! Pamiętaj zapisać zmiany.", "Sukces");
             
-            // Wyczyść pola
             TxtNewName.Clear();
             TxtNewPrice.Clear();
         }
@@ -159,6 +137,12 @@ public partial class MainWindow : Window
         {
             MessageBox.Show($"Błąd: {ex.Message}", "Błąd");
         }
+    }
+
+    private void UpdateGrid()
+    {
+        GridOffers.ItemsSource = null;
+        GridOffers.ItemsSource = _allOffers;
     }
 
     private void BtnSaveFile_Click(object sender, RoutedEventArgs e)
