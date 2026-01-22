@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Asystent Zakupowy (WPF)" Height="650" Width="1000"
         FontFamily="Segoe UI" FontSize="14">
-    
+
     <Window.Resources>
         <!-- Modern Colors -->
         <SolidColorBrush x:Key="PrimaryColor" Color="#007ACC"/>
@@ -15,7 +15,7 @@
         <SolidColorBrush x:Key="BackgroundColor" Color="#F5F5F5"/>
         <SolidColorBrush x:Key="CardBackground" Color="White"/>
         <SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
-        
+
         <!-- Button Style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
@@ -61,20 +61,20 @@
             </Setter>
         </Style>
 
-         <!-- Card Style for Results -->
-         <Style x:Key="ResultCard" TargetType="Border">
-             <Setter Property="Background" Value="{StaticResource CardBackground}"/>
-             <Setter Property="BorderBrush" Value="#DDDDDD"/>
-             <Setter Property="BorderThickness" Value="1"/>
-             <Setter Property="CornerRadius" Value="8"/>
-             <Setter Property="Margin" Value="0,0,0,10"/>
-             <Setter Property="Padding" Value="10"/>
-             <Setter Property="Effect">
-                 <Setter.Value>
-                     <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
-                 </Setter.Value>
-             </Setter>
-         </Style>
+        <!-- Card Style for Results -->
+        <Style x:Key="ResultCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="#DDDDDD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Background="{StaticResource BackgroundColor}">
@@ -109,7 +109,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
+
                     <StackPanel Grid.Row="0" Margin="20,20,20,10">
                         <TextBlock Text="Zarządzaj Ofertami" FontSize="22" FontWeight="Bold" Foreground="#333"/>
                         <TextBlock Text="Przeglądaj bazę produktów dostępnych w sklepach." Foreground="#666" Margin="0,5,0,15"/>
@@ -141,13 +141,13 @@
                             </Style>
                         </DataGrid.CellStyle>
                         <DataGrid.Columns>
-                           <DataGridTextColumn Header="Sklep" Binding="{Binding Store.Name}" Width="1.5*"/>
-                           <DataGridTextColumn Header="Produkt" Binding="{Binding Product.Name}" Width="2*"/>
-                           <DataGridTextColumn Header="Cena" Binding="{Binding Price, StringFormat={}{0:N2} zł}" Width="*"/>
-                           <DataGridTextColumn Header="Jedn." Binding="{Binding Product.UnitName}" Width="0.5*"/>
-                           <DataGridTextColumn Header="Cena jedn." Binding="{Binding UnitPrice, StringFormat={}{0:N2} zł}" Width="*"/>
-                           <DataGridTextColumn Header="Promo" Binding="{Binding PromoPrice, TargetNullValue='', StringFormat={}{0:N2} zł}" Width="*"/>
-                           <DataGridTextColumn Header="Opis Promo" Binding="{Binding PromoDescription}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Sklep" Binding="{Binding Store.Name}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Produkt" Binding="{Binding Product.Name}" Width="2*"/>
+                            <DataGridTextColumn Header="Cena" Binding="{Binding Price, StringFormat={}{0:N2} zł}" Width="*"/>
+                            <DataGridTextColumn Header="Jedn." Binding="{Binding Product.UnitName}" Width="0.5*"/>
+                            <DataGridTextColumn Header="Cena jedn." Binding="{Binding UnitPrice, StringFormat={}{0:N2} zł}" Width="*"/>
+                            <DataGridTextColumn Header="Promo" Binding="{Binding PromoPrice, TargetNullValue='', StringFormat={}{0:N2} zł}" Width="*"/>
+                            <DataGridTextColumn Header="Opis Promo" Binding="{Binding PromoDescription}" Width="1.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -157,9 +157,12 @@
             <TabItem Header="Kalkulator Koszyka">
                 <Grid Background="White" Margin="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300"/> <!-- Products List -->
-                        <ColumnDefinition Width="1.5*"/> <!-- Calc Logic -->
-                        <ColumnDefinition Width="1.5*"/> <!-- Results -->
+                        <ColumnDefinition Width="300"/>
+                        <!-- Products List -->
+                        <ColumnDefinition Width="1.5*"/>
+                        <!-- Calc Logic -->
+                        <ColumnDefinition Width="1.5*"/>
+                        <!-- Results -->
                     </Grid.ColumnDefinitions>
 
                     <!-- Column 1: Products -->
@@ -208,65 +211,113 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            
-                            <TextBlock Text="Lista zakupów (po przecinku):" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                            
-                            <TextBox x:Name="TxtShoppingList" Grid.Row="1" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                                     FontSize="15" Padding="10" Margin="0,0,0,10"/>
-                            
-                            <TextBlock Grid.Row="2" Text="Np. Cola, Masło" Foreground="#999" FontStyle="Italic" Margin="0,0,0,15"/>
 
-                            <Button x:Name="BtnCalculate" Grid.Row="3" Content="OBLICZ KOSZYK" Height="50" FontSize="16" Click="BtnCalculate_Click"/>
+                            <TextBlock Text="Lista zakupów (po przecinku):" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                            <TextBox x:Name="TxtShoppingList" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                     FontSize="15" Padding="10" Margin="0,31,0,0" Grid.RowSpan="2" Height="367" VerticalAlignment="Top"/>
+
+                            <TextBlock Grid.Row="1" Text="Np. Cola, Masło"  Foreground="#999" FontStyle="Italic" Margin="0,372,0,103"/>
+                            <Button x:Name="BtnCalculate_Copy" Panel.ZIndex="1"  Grid.Row="1" Content="OBLICZ KOSZYK" Height="50" FontSize="16" Click="BtnCalculate_Click" Margin="0,412,0,32"/>
+                            
+
                         </Grid>
                     </Border>
 
                     <!-- Column 3: Results -->
-                    <Border Grid.Column="2" Padding="20" Background="#FAFAFA" BorderBrush="{StaticResource BorderColor}" BorderThickness="1,0,0,0">
+                    <Border Grid.Column="2"
+        Padding="20"
+        Background="#FAFAFA"
+        BorderBrush="{StaticResource BorderColor}"
+        BorderThickness="1,0,0,0"
+        Margin="0,0,0,85">
+
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
+                                <!-- Tytuł -->
                                 <RowDefinition Height="*"/>
+                                <!-- Lista -->
+                                <RowDefinition Height="Auto"/>
+                                <!-- Przycisk -->
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Ranking Sklepów:" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
-                            
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+
+                            <!-- Tytuł -->
+                            <TextBlock FontSize="16"
+                   FontWeight="Bold"
+                   Margin="0,0,0,15"
+                   Grid.Row="0">
+            <Run Language="pl-pl" Text="Wybierz sklep"/>
+            <Run Text=":"/>
+                            </TextBlock>
+
+                            <!-- Lista wyników -->
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Margin="0,0,0,20"
+                      Grid.Row="1">
+
                                 <ItemsControl x:Name="ListResults">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Style="{StaticResource ResultCard}">
+                                            <Border BorderBrush="#555"
+                                Style="{StaticResource ResultCard}"
+                                MouseLeftButtonDown="ChooseOffer">
+
                                                 <Grid>
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="Auto"/>
                                                     </Grid.RowDefinitions>
-                                                    
-                                                    <!-- Store Name -->
-                                                    <TextBlock Text="{Binding Store.Name}" FontSize="18" FontWeight="Bold" Margin="0,0,0,5"/>
-                                                    
-                                                    <!-- Price -->
-                                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,5">
+
+                                                    <TextBlock Text="{Binding Store.Name}"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,5"/>
+
+                                                    <StackPanel Grid.Row="1"
+                                            Orientation="Horizontal"
+                                            Margin="0,0,0,5">
                                                         <TextBlock Text="Suma: " Foreground="#555"/>
-                                                        <TextBlock Text="{Binding Sum, StringFormat={}{0:N2} zł}" FontWeight="Bold" Foreground="#4CAF50"/>
+                                                        <TextBlock x:Name="Price_of_basket"
+                                               Text="{Binding Sum, StringFormat={}{0:N2} zł}"
+                                               FontWeight="Bold"
+                                               Foreground="#4CAF50"/>
                                                     </StackPanel>
 
-                                                    <!-- Missing Products -->
-                                                    <ItemsControl Grid.Row="2" ItemsSource="{Binding MissingProducts}">
+                                                    <ItemsControl Grid.Row="2"
+                                              ItemsSource="{Binding MissingProducts}">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <TextBlock Text="{Binding StringFormat='BRAK: {0}'}" Foreground="Red" Margin="0,2"/>
+                                                                <TextBlock Text="{Binding StringFormat='BRAK: {0}'}"
+                                                       Foreground="Red"
+                                                       Margin="0,2"/>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
+
                                                 </Grid>
+
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+
                             </ScrollViewer>
-                            
+
+                            <!-- Przycisk -->
+                            <Button x:Name="BtnGoToPayment2"
+                Grid.Row="2"
+                Content="PRZEJDŹ DO PŁATNOŚCI"
+                Height="50"
+                FontSize="16"
+                Click="BtnGoToPayment"
+                Margin="0,10,0,0"
+                IsEnabled="False"
+                Background="#FFA1A9AE"/>
                         </Grid>
                     </Border>
+
                 </Grid>
             </TabItem>
 
@@ -290,30 +341,30 @@
                                 <ColumnDefinition Width="15"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Cena (zł)" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <TextBox x:Name="TxtNewPrice"/>
                             </StackPanel>
-                            
-                             <StackPanel Grid.Column="2">
+
+                            <StackPanel Grid.Column="2">
                                 <TextBlock Text="Ilość" FontWeight="SemiBold" Margin="0,0,0,5"/>
                                 <TextBox x:Name="TxtNewQty" Text="1"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="4">
-                                 <TextBlock Text="Jednostka" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                 <ComboBox x:Name="ComboUnit" IsEditable="True" SelectedIndex="0" Height="36">
-                                     <ComboBoxItem Content="szt"/>
-                                     <ComboBoxItem Content="kg"/>
-                                     <ComboBoxItem Content="l"/>
-                                     <ComboBoxItem Content="pak"/>
-                                 </ComboBox>
+                                <TextBlock Text="Jednostka" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="ComboUnit" IsEditable="True" SelectedIndex="0" Height="36">
+                                    <ComboBoxItem Content="szt"/>
+                                    <ComboBoxItem Content="kg"/>
+                                    <ComboBoxItem Content="l"/>
+                                    <ComboBoxItem Content="pak"/>
+                                </ComboBox>
                             </StackPanel>
                         </Grid>
 
                         <Button x:Name="BtnAddOffer" Content="DODAJ OFERTĘ" Margin="0,30,0,0" Height="45" Click="BtnAddOffer_Click"/>
-                         <Button x:Name="BtnSaveNew" Content="ZAPISZ ZMIANY W BAZIE" Margin="0,15,0,0" Height="45" Click="BtnSaveFile_Click" Background="#4CAF50"/>
+                        <Button x:Name="BtnSaveNew" Content="ZAPISZ ZMIANY W BAZIE" Margin="0,15,0,0" Height="45" Click="BtnSaveFile_Click" Background="#4CAF50"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

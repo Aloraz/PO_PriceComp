@@ -186,7 +186,7 @@ namespace projektPO
             Console.WriteLine(new string('-', 120));
             Console.ReadKey();
         }
-
+      
         static void PokazBaze(List<Offer> offers)
         {
             Console.WriteLine("\n--- BAZA OFERT ---");

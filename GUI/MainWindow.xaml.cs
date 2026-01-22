@@ -17,6 +17,11 @@ namespace PriceComp.GUI;
 public partial class MainWindow : Window
 {
     private List<Offer> _allOffers = new List<Offer>();
+    private Border _selectedOfferBorder;
+
+    private Border _lastSelectedBorder = null; 
+    private readonly SolidColorBrush BaseBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555"));
+    public string _selectedPrice;
 
     public MainWindow()
     {
@@ -59,6 +64,51 @@ public partial class MainWindow : Window
         if (stores.Count > 0) ComboStores.SelectedIndex = 0;
     }
 
+    private void ChooseOffer(object sender, RoutedEventArgs e)
+    {
+        var clicked = sender as Border; 
+        if (clicked == null) return; 
+       
+        if (_lastSelectedBorder == clicked && clicked.BorderBrush == Brushes.Blue) 
+        {
+            clicked.BorderBrush = BaseBrush; 
+            _lastSelectedBorder = null; 
+            return; 
+        } 
+        if (_lastSelectedBorder != null) 
+        {
+            _lastSelectedBorder.BorderBrush = BaseBrush; 
+        } 
+        clicked.BorderBrush = Brushes.Blue; 
+        _lastSelectedBorder = clicked; 
+        
+        var textboxPrice = clicked.FindName("Price_of_basket") as TextBlock;
+        
+
+        if ((!textboxPrice.Text.StartsWith("0")) && textboxPrice.Text!=null)
+        {
+            _selectedPrice = textboxPrice.Text;
+            BtnGoToPayment2.IsEnabled = true;
+           BtnGoToPayment2.Background = Brushes.Green;
+        } else
+        {
+            BtnGoToPayment2.IsEnabled = false;
+            
+            BtnGoToPayment2.Background= (Brush)new BrushConverter().ConvertFromString("#FFA1A9AE");
+
+        }
+
+    }
+    private void BtnGoToPayment(object sender, RoutedEventArgs e)
+    {
+      BtnCalculate_Click(sender, e);
+      Payment paymentWindow = new Payment(_selectedPrice);
+      
+
+
+        paymentWindow.Show();
+
+    }
     private void BtnCalculate_Click(object sender, RoutedEventArgs e)
     {
         string input = TxtShoppingList.Text;

@@ -29,6 +29,11 @@ namespace projektPO
             Name = name;
         }
 
+        protected Store() 
+        {
+            Name = string.Empty;
+        }
+
         public abstract decimal GetAdditionalCost();
     }
 }

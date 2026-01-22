@@ -9,6 +9,7 @@ namespace projektPO
     public class LocalStore : Store
     {
         public LocalStore(string name) : base(name) { }
+        public LocalStore():base() { }
 
         public override decimal GetAdditionalCost()
         {

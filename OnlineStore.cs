@@ -26,6 +26,11 @@ namespace projektPO
             DeliveryCost = deliveryCost;
         }
 
+        public OnlineStore():base()
+        {
+            DeliveryCost = 0;
+        }
+
         public override decimal GetAdditionalCost()
         {
             return DeliveryCost;

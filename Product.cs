@@ -36,6 +36,13 @@ namespace projektPO
                 Quantity = quantity;
                 UnitName = unitName;
             }
+            
+            public Product()
+        {
+            Name = string.Empty;
+            Quantity= 0;
+            UnitName = string.Empty;
+        }
             public bool Equals(Product other)
             {
                 if (other == null) return false;
