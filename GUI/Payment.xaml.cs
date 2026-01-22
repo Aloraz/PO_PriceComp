@@ -31,5 +31,44 @@ namespace PriceComp.GUI
             MessageBox.Show("Dziękujemy za zamówienie!");
             this.Close();
         }
+
+        private void TxtCardNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            
+            string rawText = textBox.Text.Replace("-", "");
+
+            string cleanText = new string(rawText.Where(char.IsDigit).ToArray());
+
+            StringBuilder formatted = new StringBuilder();
+
+            for (int i = 0; i < cleanText.Length; i++)
+            {       
+                if (i > 0 && i % 4 == 0)
+                {
+                    formatted.Append("-");
+                }
+                formatted.Append(cleanText[i]);
+            }
+         
+            if (textBox.Text != formatted.ToString())
+            {
+                int cursorPosition = textBox.SelectionStart;
+                int oldLength = textBox.Text.Length;
+
+                textBox.Text = formatted.ToString();
+
+                
+                int newLength = textBox.Text.Length;
+                int selectionIndex = cursorPosition + (newLength - oldLength);
+
+                if (selectionIndex >= 0 && selectionIndex <= textBox.Text.Length)
+                {
+                    textBox.SelectionStart = selectionIndex;
+                }
+            }
+        }
     }
 }
