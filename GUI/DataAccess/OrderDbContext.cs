@@ -15,6 +15,10 @@ namespace dataAccess
         public DbSet<Client> Clients { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public OrderDbContext() : base("name=OrderDbContext")
+        {
+        }
+
 
 
     }

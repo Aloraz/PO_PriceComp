@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "projektPO", "projektPO.csproj", "{79968389-AE70-473E-A739-CB9A69B8D49A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{9824AA2D-9169-1FBC-8A83-7227C72EA239}"
+	ProjectSection(SolutionItems) = preProject
+		app.config = app.config
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceComp.GUI", "GUI\PriceComp.GUI.csproj", "{CEF406E1-89F4-4C23-A4D6-20D40F142669}"
 EndProject

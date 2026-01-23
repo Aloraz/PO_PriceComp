@@ -40,7 +40,8 @@ namespace PriceComp.GUI
                 //MessageBox.Show($"Substring(0, length-3): {price.Substring(0, price.Length - 3)}");
                 //price = price.Substring(0, price.Length - 3);
                 //_price = decimal.Parse(price);
-                price = price.Replace(" PLN", "").Replace(",", ".");
+                price = price.Replace(" zł", "").Replace(",", ".").Replace(" zl", "");
+
 
                 if (!decimal.TryParse(price, System.Globalization.NumberStyles.Any,
                                       System.Globalization.CultureInfo.InvariantCulture,
