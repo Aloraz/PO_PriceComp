@@ -9,14 +9,14 @@
         FontFamily="Segoe UI" FontSize="14">
 
     <Window.Resources>
-        <!-- Modern Colors -->
+        
         <SolidColorBrush x:Key="PrimaryColor" Color="#007ACC"/>
         <SolidColorBrush x:Key="PrimaryHoverColor" Color="#0094F5"/>
         <SolidColorBrush x:Key="BackgroundColor" Color="#F5F5F5"/>
         <SolidColorBrush x:Key="CardBackground" Color="White"/>
         <SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
 
-        <!-- Button Style -->
+        
         <Style TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -24,23 +24,51 @@
             <Setter Property="Padding" Value="15,8"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.3" BlurRadius="5"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource PrimaryHoverColor}"/>
-                </Trigger>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" To="15" Duration="0:0:0.2"/>
+                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" To="#0094F5" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" To="5" Duration="0:0:0.2"/>
+                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" To="#007ACC" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
             </Style.Triggers>
         </Style>
 
-        <!-- TextBox Style -->
+        
         <Style TargetType="TextBox">
             <Setter Property="Padding" Value="8"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -61,7 +89,7 @@
             </Setter>
         </Style>
 
-        <!-- Card Style for Results -->
+        
         <Style x:Key="ResultCard" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource CardBackground}"/>
             <Setter Property="BorderBrush" Value="#DDDDDD"/>
@@ -69,11 +97,28 @@
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Margin" Value="0,0,0,10"/>
             <Setter Property="Padding" Value="10"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform Y="20"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Opacity" Value="0"/>
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="Black" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1.0" Duration="0:0:0.5"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" To="0" Duration="0:0:0.4" DecelerationRatio="0.5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -101,7 +146,7 @@
                 </Style>
             </TabControl.Resources>
 
-            <!-- Tab 1: Offers List -->
+            
             <TabItem Header="Baza Ofert">
                 <Grid Background="White" Margin="0" UseLayoutRounding="True">
                     <Grid.RowDefinitions>
@@ -153,19 +198,19 @@
                 </Grid>
             </TabItem>
 
-            <!-- Tab 2: Shopping Calculator -->
+            
             <TabItem Header="Kalkulator Koszyka">
                 <Grid Background="White" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="300"/>
-                        <!-- Products List -->
+                        
                         <ColumnDefinition Width="1.5*"/>
-                        <!-- Calc Logic -->
+                        
                         <ColumnDefinition Width="1.5*"/>
-                        <!-- Results -->
+                        
                     </Grid.ColumnDefinitions>
 
-                    <!-- Column 1: Products -->
+                    
                     <Border Grid.Column="0" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,1,0" Padding="15">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -202,7 +247,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Column 2: Search Input -->
+                    
                     <Border Grid.Column="1" Padding="20">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -224,7 +269,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Column 3: Results -->
+                    
                     <Border Grid.Column="2"
         Padding="20"
         Background="#FAFAFA"
@@ -235,14 +280,14 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <!-- Tytuł -->
+                                
                                 <RowDefinition Height="*"/>
-                                <!-- Lista -->
+                                
                                 <RowDefinition Height="Auto"/>
-                                <!-- Przycisk -->
+                                
                             </Grid.RowDefinitions>
 
-                            <!-- Tytuł -->
+                            
                             <TextBlock FontSize="16"
                    FontWeight="Bold"
                    Margin="0,0,0,15"
@@ -251,7 +296,7 @@
             <Run Text=":"/>
                             </TextBlock>
 
-                            <!-- Lista wyników -->
+                            
                             <ScrollViewer VerticalScrollBarVisibility="Auto"
                       Margin="0,0,0,20"
                       Grid.Row="1">
@@ -305,7 +350,7 @@
 
                             </ScrollViewer>
 
-                            <!-- Przycisk -->
+                            
                             <Button x:Name="BtnGoToPayment2"
                 Grid.Row="2"
                 Content="PRZEJDŹ DO PŁATNOŚCI"
@@ -321,7 +366,7 @@
                 </Grid>
             </TabItem>
 
-            <!-- Tab 3: Add New Offer -->
+            
             <TabItem Header="Dodaj Ofertę">
                 <Grid Background="#FFF">
                     <StackPanel Margin="20" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center">

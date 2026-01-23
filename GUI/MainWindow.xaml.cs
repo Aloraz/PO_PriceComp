@@ -128,6 +128,7 @@ public partial class MainWindow : Window
         var results = ShoppingLogic.CalculateBasket(_allOffers, shoppingList);
 
         ListResults.ItemsSource = results;
+        SoundGenerator.PlaySuccess();
     }
 
     private void ListProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -155,6 +156,9 @@ public partial class MainWindow : Window
         }
     }
 
+    // Delegate definition
+    public delegate bool ValidationDelegate(string input, out string errorMessage);
+
     private void BtnAddOffer_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -162,10 +166,45 @@ public partial class MainWindow : Window
             var store = ComboStores.SelectedItem as Store;
             if (store == null) { MessageBox.Show("Wybierz sklep!"); return; }
 
-            string name = TxtNewName.Text;
-            if (string.IsNullOrWhiteSpace(name)) { MessageBox.Show("Podaj nazwę produktu!"); return; }
+            // Delegate validation logic
+            ValidationDelegate validateName = (string input, out string error) => 
+            {
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    error = "Podaj nazwę produktu!";
+                    return false;
+                }
+                error = null;
+                return true;
+            };
 
-            if (!decimal.TryParse(TxtNewPrice.Text, out decimal price)) { MessageBox.Show("Błędna cena!"); return; }
+            ValidationDelegate validatePrice = (string input, out string error) =>
+            {
+                if (!decimal.TryParse(input, out _))
+                {
+                    error = "Błędna cena! Wpisz liczbę.";
+                    return false;
+                }
+                error = null;
+                return true;
+            };
+
+            // Execute validation
+            if (!validateName(TxtNewName.Text, out string nameError)) 
+            {
+                 MessageBox.Show(nameError);
+                 return; 
+            }
+
+            if (!validatePrice(TxtNewPrice.Text, out string priceError)) 
+            { 
+                MessageBox.Show(priceError); 
+                return; 
+            }
+
+            // Processing valid data
+            string name = TxtNewName.Text;
+            decimal price = decimal.Parse(TxtNewPrice.Text);
             if (!decimal.TryParse(TxtNewQty.Text, out decimal qty)) qty = 1;
 
             string unit = ComboUnit.Text;
@@ -178,6 +217,7 @@ public partial class MainWindow : Window
             UpdateGrid();
             UpdateProductsList();
 
+            SoundGenerator.PlaySound(600, 150, 0.5); 
             MessageBox.Show("Dodano nową ofertę! Pamiętaj zapisać zmiany.", "Sukces");
             
             TxtNewName.Clear();
@@ -198,6 +238,7 @@ public partial class MainWindow : Window
     private void BtnSaveFile_Click(object sender, RoutedEventArgs e)
     {
         DataManager.SaveOffers(_allOffers);
+        SoundGenerator.PlaySound(500, 300, 0.4, true); 
         MessageBox.Show("Zapisano zmiany do pliku oferty.json", "Zapisano");
     }
 }
