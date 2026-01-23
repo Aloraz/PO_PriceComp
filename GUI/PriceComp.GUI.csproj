@@ -12,11 +12,14 @@
     <Compile Include="..\Store.cs" Link="Models\Store.cs" />
     <Compile Include="..\LocalStore.cs" Link="Models\LocalStore.cs" />
     <Compile Include="..\OnlineStore.cs" Link="Models\OnlineStore.cs" />
-    <Compile Include="..\Product.cs" Link="Models\Product.cs" />
     <Compile Include="..\Offer.cs" Link="Models\Offer.cs" />
     <Compile Include="..\DataManager.cs" Link="Logic\DataManager.cs" />
     <Compile Include="..\DataSeeder.cs" Link="Logic\DataSeeder.cs" />
     <Compile Include="..\ShoppingLogic.cs" Link="Logic\ShoppingLogic.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
   </ItemGroup>
 
 </Project>

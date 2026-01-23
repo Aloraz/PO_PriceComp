@@ -11,23 +11,89 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using projektPO;
+using dataAccess;
 
 namespace PriceComp.GUI
 {
-    /// <summary>
-    /// Interaction logic for Payment.xaml
-    /// </summary>
+  
     public partial class Payment : Window
     {
-        
-        public Payment(string price)
+        string _shopName;
+        decimal _price;
+        List<Product> _orderedProducts = new List<Product>();
+
+        public Payment(string price, string shopName, List<Product> orderedProducts)
         {
             InitializeComponent();
-            TxtTotalPrice.Text = $"{price} PLN";
+            TxtTotalPrice.Text = $"{price}";
+
+            _shopName = shopName;
+            try
+            {
+
+                //price = price.Replace(",", ".");
+                //price = price.Replace(" PLN", "");
+                // decimal value = decimal.Parse(price);
+
+
+                //MessageBox.Show($"Substring(0, length-3): {price.Substring(0, price.Length - 3)}");
+                //price = price.Substring(0, price.Length - 3);
+                //_price = decimal.Parse(price);
+                price = price.Replace(" PLN", "").Replace(",", ".");
+
+                if (!decimal.TryParse(price, System.Globalization.NumberStyles.Any,
+                                      System.Globalization.CultureInfo.InvariantCulture,
+                                      out _price))
+                {
+                    MessageBox.Show($"Nie mogę sparsować ceny: {price}");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd przy parsowaniu ceny: {ex.Message}");
+            }
+            
+            _orderedProducts = orderedProducts;
         }
 
         private void BtnConfirm_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                long card =long.Parse(TxtCardNumber.Text.Replace("-", ""));
+                if (card.ToString().Length != 16)
+                {
+                    MessageBox.Show("Numer karty kredytowej musi zawierać 16 cyfr.");
+                    return;
+                }
+                Client client = new Client
+                {
+                    Name = TxtFirstName.Text,
+                    Surname = TxtLastName.Text,
+                    Address = TxtStreet.Text,
+                    PhoneNumber = TxtPhone.Text,
+                    HouseNum = int.Parse(TxtHouseNum.Text),
+                    ApartmentNum = int.Parse(TxtApartmentNum.Text),
+
+                    CreditCardNum = long.Parse(TxtCardNumber.Text.Replace("-", "")),
+                };
+                Order order = new Order(client, _orderedProducts, _price, new OnlineStore(_shopName, _price));
+                order.SaveToDB();
+
+            } catch (FormatException)
+            {
+                MessageBox.Show("Nieprawidłowy format numeru karty kredytowej.");
+                return;
+            } catch(Exception ex) {
+
+                MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+                return;
+            }
+
+
+
             MessageBox.Show("Dziękujemy za zamówienie!");
             this.Close();
         }

@@ -23,6 +23,9 @@ public partial class MainWindow : Window
     private readonly SolidColorBrush BaseBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555"));
     public string _selectedPrice;
 
+    public string _selectedStore;
+    public List<Product> _selectedProducts= new List<Product>();
+
     public MainWindow()
     {
         InitializeComponent();
@@ -83,7 +86,9 @@ public partial class MainWindow : Window
         _lastSelectedBorder = clicked; 
         
         var textboxPrice = clicked.FindName("Price_of_basket") as TextBlock;
-        
+        var shop =(clicked.FindName("SelectedStore") as TextBlock);
+        _selectedStore = shop.Text;
+        MessageBox.Show($"Wybrano sklep: {_selectedStore}", "Sklep wybrany");
 
         if ((!textboxPrice.Text.StartsWith("0")) && textboxPrice.Text!=null)
         {
@@ -101,13 +106,23 @@ public partial class MainWindow : Window
     }
     private void BtnGoToPayment(object sender, RoutedEventArgs e)
     {
-      BtnCalculate_Click(sender, e);
-      Payment paymentWindow = new Payment(_selectedPrice);
-      
+        try
+        {
+           BtnCalculate_Click(sender, e);
+           //int newPrice=(int) _selectedPrice.Substring(0, _selectedPrice.Length-3);
+           MessageBox.Show($"Typeof _selectedPrice: {_selectedPrice.GetType()}");
+           Payment paymentWindow = new Payment(_selectedPrice, _selectedStore, _selectedProducts);
 
 
-        paymentWindow.Show();
 
+            paymentWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Błąd at BtnGoToPayment: {ex.Message}", "Błąd");
+
+
+        }
     }
     private void BtnCalculate_Click(object sender, RoutedEventArgs e)
     {
@@ -136,9 +151,20 @@ public partial class MainWindow : Window
         {
             string currentText = TxtShoppingList.Text.Trim();
             
+            try
+            {
+                _selectedProducts.Add(new Product(selectedProduct));
+                MessageBox.Show($"Dodano {selectedProduct} do listy zakupów.", "Produkt dodany");
+            } catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd: {ex.Message}", "Błąd");
+            }
+            
+
             if (string.IsNullOrEmpty(currentText))
             {
                 TxtShoppingList.Text = selectedProduct;
+                
             }
             else
             {
@@ -152,6 +178,7 @@ public partial class MainWindow : Window
                 }
                 TxtShoppingList.Text = currentText + selectedProduct;
             }
+            
         }
     }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-
+using dataAccess;
 
 namespace projektPO
 {
@@ -15,7 +15,10 @@ namespace projektPO
     {
         private string _name;
 
-    
+    [Key]
+    public int ProductId { get; set; }
+    public virtual Order Order { get; set; }
+
         public string Name
         {
             get => _name;
