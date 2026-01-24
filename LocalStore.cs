@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace projektPO
+namespace PriceComp.GUI
 {
     public class LocalStore : Store
     {

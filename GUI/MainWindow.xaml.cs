@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using projektPO;
+
 
 using System.IO;
 
@@ -35,7 +35,7 @@ public partial class MainWindow : Window
         
         if (_allOffers.Count == 0)
         {
-             projektPO.DataSeeder.Initialize(_allOffers);
+             DataSeeder.Initialize(_allOffers);
         }
 
         UpdateGrid();

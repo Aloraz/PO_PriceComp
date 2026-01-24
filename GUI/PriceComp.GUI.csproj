@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿ 
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -17,6 +18,16 @@
     <Compile Include="..\DataManager.cs" Link="Logic\DataManager.cs" />
     <Compile Include="..\DataSeeder.cs" Link="Logic\DataSeeder.cs" />
     <Compile Include="..\ShoppingLogic.cs" Link="Logic\ShoppingLogic.cs" />
+   
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+	
+ <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+  </ItemGroup>
+
 
 </Project>

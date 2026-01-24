@@ -4,14 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace projektPO
+
+namespace PriceComp.GUI
 {
     [JsonDerivedType(typeof(LocalStore), typeDiscriminator: "local")]
     [JsonDerivedType(typeof(OnlineStore), typeDiscriminator: "online")]
     public abstract class Store
     {
         private string _name;
+
+        [Key]
+        public int StoreID { get; set; }
 
         public string Name
         {

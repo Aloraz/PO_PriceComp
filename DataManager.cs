@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace projektPO
+namespace PriceComp.GUI
 {
     public static class DataManager
     {

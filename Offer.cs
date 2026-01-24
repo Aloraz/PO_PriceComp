@@ -1,17 +1,23 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using PriceComp.GUI.DataAccess;
 
-
-namespace projektPO
+namespace PriceComp.GUI
 {
     public class Offer : IPriceable, IComparable<Offer>
     {
         private decimal _price;
+        [Key]
+        public int OfferID { get; set; }
         public Product Product { get; private set; }
         public Store Store { get; private set; }
+
+        //public ICollection<OrderDetails> Order_Details { get; set; } = new List<OrderDetails>();
 
         public decimal Price
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace projektPO
+namespace PriceComp.GUI
 {
     public static class DataSeeder
     {
