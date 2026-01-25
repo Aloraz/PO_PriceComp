@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Reflection;
+using System.Linq;
+using PriceComp.GUI.Database;
+using PriceComp.GUI.Models;
 
 namespace PriceComp.GUI
 {
@@ -8,9 +11,13 @@ namespace PriceComp.GUI
     {
         public static void Initialize(List<Offer> offers)
         {
-            try
+            // Keeping Initialize simplified or empty as we focus on DB, 
+            // but ensuring it doesn't break Console App if called (it writes to JSON if implemented).
+             try
             {
-                Console.WriteLine("[INFO] Generowanie dużej bazy danych...");
+                 Console.WriteLine("[INFO] Generowanie testowych danych (RAM) - Użyj DB!");
+                 
+                 
 
                 //  SKLEPY
                 var biedronka = new LocalStore("Biedronka");
@@ -100,14 +107,91 @@ namespace PriceComp.GUI
                 offers.Add(new Offer(woda, lidl, 1.79m));
                 offers.Add(new Offer(mleko, biedronka, 3.20m));
                 offers.Add(new Offer(mleko, lidl, 3.20m));
+            }
+            catch {}
+        }
 
-                // Zapis
-                DataManager.SaveOffers(offers);
-                Console.WriteLine("[SUKCES] Baza danych została wygenerowana (Produkty, Promocje, Warianty)!");
+        public static void SeedToDatabase(PriceCompContext context)
+        {
+            try
+            {
+                Console.WriteLine("[INFO] Seedowanie bazy danych...");
+
+                // 1. Load from JSON
+                var offers = DataManager.LoadOffers();
+
+                if (offers != null && offers.Count > 0)
+                {
+                    Console.WriteLine($"[INFO] Generowanie bazy na podstawie pliku oferty.json ({offers.Count} ofert)...");
+
+                    // 2. Deduplicate Stores & Products to ensure we don't insert duplicates
+                    var uniqueStores = new Dictionary<string, Store>();
+                    var uniqueProducts = new Dictionary<string, Product>();
+
+                    // Identify unique entities
+                    foreach (var offer in offers)
+                    {
+                        // Store Deduplication
+                        if (offer.Store != null)
+                        {
+                            if (!uniqueStores.ContainsKey(offer.Store.Name))
+                            {
+                                uniqueStores[offer.Store.Name] = offer.Store;
+                            }
+                        }
+
+                        // Product Deduplication (Uniqueness by Name + Unit + Quantity)
+                        if (offer.Product != null)
+                        {
+                             var key = $"{offer.Product.Name}_{offer.Product.UnitName}_{offer.Product.Quantity}";
+                             if (!uniqueProducts.ContainsKey(key))
+                             {
+                                uniqueProducts[key] = offer.Product;
+                             }
+                        }
+                    }
+                    
+                     // 3. Fix references in Offers to point to the single unique instances
+                     //    (JSON deserialization created disjoint copies)
+                     foreach (var offer in offers)
+                     {
+                         if (offer.Store != null && uniqueStores.TryGetValue(offer.Store.Name, out var correctStore))
+                         {
+                             // Set private Store property using Reflection
+                             typeof(Offer).GetProperty("Store").SetValue(offer, correctStore);
+                         }
+
+                         if (offer.Product != null)
+                         {
+                             var key = $"{offer.Product.Name}_{offer.Product.UnitName}_{offer.Product.Quantity}";
+                             if (uniqueProducts.TryGetValue(key, out var correctProduct))
+                             {
+                                 // Set private Product property using Reflection
+                                 typeof(Offer).GetProperty("Product").SetValue(offer, correctProduct);
+                             }
+                         }
+                     }
+                    
+                    // 4. Add to Context
+                    // Adding offers will add related reachable entities (Stores/Products), 
+                    // BUT explicitly adding ranges is safer to ensure they are tracked.
+                    
+                    context.Stores.AddRange(uniqueStores.Values);
+                    context.Products.AddRange(uniqueProducts.Values);
+                    context.Offers.AddRange(offers);
+
+                    context.SaveChanges();
+                    Console.WriteLine("[SUKCES] Baza danych została wygenerowana z pliku JSON!");
+                }
+                else
+                {
+                    Console.WriteLine("[OSTRZEŻENIE] Plik JSON pusty lub nie istnieje.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[BŁĄD SEEDOWANIA] {ex.Message}");
+                Console.WriteLine($"[BŁĄD SEEDOWANIA DB] {ex.Message}");
+                if (ex.InnerException != null) Console.WriteLine($"Inner: {ex.InnerException.Message}");
             }
         }
     }

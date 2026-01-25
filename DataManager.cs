@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using PriceComp.GUI.Models;
 
 namespace PriceComp.GUI
 {

@@ -8,15 +8,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PriceComp.GUI.Models;
 
 
 using System.IO;
+using PriceComp.GUI.Database;
 
 namespace PriceComp.GUI;
 
 public partial class MainWindow : Window
 {
     private List<Offer> _allOffers = new List<Offer>();
+    private ShoppingLogic.BasketResult _selectedBasket;
     private Border _selectedOfferBorder;
 
     private Border _lastSelectedBorder = null; 
@@ -31,20 +34,41 @@ public partial class MainWindow : Window
 
     private void LoadData()
     {
-        _allOffers = DataManager.LoadOffers();
-        
-        if (_allOffers.Count == 0)
+        // 1. Seed Check
+        try
         {
-             DataSeeder.Initialize(_allOffers);
+            using (var context = new PriceComp.GUI.Database.PriceCompContext())
+            {
+                context.Database.CreateIfNotExists();
+                context.SeedIfNotExists();
+                
+                // 2. Load form DB
+                /* 
+                 * We load from DB to get the real IDs (OfferID, etc.) 
+                 * which are required for correct saving of Orders later.
+                 * Loading from JSON directly would result in objects with ID=0.
+                 */
+                 _allOffers = context.Offers
+                                     .Include("Store")
+                                     .Include("Product")
+                                     .ToList();
+            }
         }
-
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Błąd bazy danych: {ex.Message}");
+        }
+        
+        // Disable DataManager.LoadOffers() call from JSON, 
+        // because we want the DB entities.
+        
         UpdateGrid();
         UpdateProductsList();
         UpdateStoresCombo();
         
         if (_allOffers.Count == 0)
         {
-             MessageBox.Show("Nie udało się wygenerować danych.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+             MessageBox.Show("Baza danych jest pusta, mimo próby seedowania.", "Ostrzeżenie", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -68,6 +92,9 @@ public partial class MainWindow : Window
     {
         var clicked = sender as Border; 
         if (clicked == null) return; 
+
+        var basket = clicked.DataContext as ShoppingLogic.BasketResult;
+        if (basket != null) _selectedBasket = basket; 
        
         if (_lastSelectedBorder == clicked && clicked.BorderBrush == Brushes.Blue) 
         {
@@ -101,13 +128,11 @@ public partial class MainWindow : Window
     }
     private void BtnGoToPayment(object sender, RoutedEventArgs e)
     {
-      BtnCalculate_Click(sender, e);
-      Payment paymentWindow = new Payment(_selectedPrice);
-      
+      // Using selected basket offers
+      var offers = _selectedBasket?.SelectedOffers ?? new List<Offer>();
 
-
-        paymentWindow.Show();
-
+      Payment paymentWindow = new Payment(_selectedPrice, offers);
+      paymentWindow.Show();
     }
     private void BtnCalculate_Click(object sender, RoutedEventArgs e)
     {

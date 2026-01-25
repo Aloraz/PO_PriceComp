@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using PriceComp.GUI.Models;
+using PriceComp.GUI.Database;
 
 namespace PriceComp.GUI
 {
@@ -20,16 +22,81 @@ namespace PriceComp.GUI
     public partial class Payment : Window
     {
         
-        public Payment(string price)
+        private List<Offer> _offersToBuy;
+
+        public Payment(string price, List<Offer> offers)
         {
             InitializeComponent();
             TxtTotalPrice.Text = $"{price} PLN";
+            _offersToBuy = offers;
         }
 
         private void BtnConfirm_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Dziękujemy za zamówienie!");
-            this.Close();
+            if (string.IsNullOrWhiteSpace(TxtFirstName.Text) || string.IsNullOrWhiteSpace(TxtLastName.Text) || string.IsNullOrWhiteSpace(TxtStreet.Text))
+            {
+                MessageBox.Show("Uzupełnij wymagane pola!");
+                return;
+            }
+
+            try
+            {
+                using (var context = new PriceCompContext())
+                {
+                    // 1. Create Client
+                    var client = new Client
+                    {
+                        FirstName = TxtFirstName.Text,
+                        LastName = TxtLastName.Text,
+                        PhoneNumber = TxtPhone.Text,
+                        Street = TxtStreet.Text,
+                        HouseNumber = TxtHouseNum.Text,
+                        ApartmentNumber = TxtApartmentNum.Text,
+                        EncryptedCardNumber = TxtCardNumber.Text.Replace("-", "") 
+                    };
+                    context.Clients.Add(client);
+
+                    // 2. Create Order
+                    var order = new Order
+                    {
+                        Client = client,
+                        OrderDate = DateTime.Now
+                    };
+                    context.Orders.Add(order);
+
+                    // 3. Group offers to calculate Quantity
+                    var groupedItems = _offersToBuy
+                        .GroupBy(o => o.OfferID)
+                        .Select(g => new 
+                        { 
+                            OfferID = g.Key, 
+                            Quantity = g.Count() 
+                        })
+                        .ToList();
+
+                    // 4. Create OrderDetails
+                    foreach (var item in groupedItems)
+                    {
+                        var detail = new OrderDetails
+                        {
+                            Order = order,
+                            OfferID = item.OfferID,
+                            Quantity = item.Quantity
+                        };
+                        context.OrderDetails.Add(detail);
+                    }
+
+                    // 5. Save all changes (Transaction)
+                    context.SaveChanges();
+                }
+
+                MessageBox.Show("Dziękujemy za zamówienie! Zapisano w bazie.");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd zapisu: {ex.Message}\n{ex.InnerException?.Message}");
+            }
         }
 
         private void TxtCardNumber_TextChanged(object sender, TextChangedEventArgs e)

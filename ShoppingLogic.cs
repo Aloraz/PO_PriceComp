@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PriceComp.GUI.Models;
 
 namespace PriceComp.GUI
 {
@@ -12,6 +13,7 @@ namespace PriceComp.GUI
             public decimal Sum { get; set; }
             public List<string> MissingProducts { get; set; } = new List<string>();
             public decimal DeliveryCost { get; set; }
+            public List<Offer> SelectedOffers { get; set; } = new List<Offer>();
         }
 
         public static List<BasketResult> CalculateBasket(List<Offer> allOffers, List<string> shoppingList)
@@ -24,6 +26,7 @@ namespace PriceComp.GUI
                 decimal totalSum = 0;
                 decimal additionalCost = store.GetAdditionalCost();
                 List<string> missing = new List<string>();
+                List<Offer> basketOffers = new List<Offer>();
 
                 foreach (var neededProduct in shoppingList)
                 {
@@ -35,6 +38,7 @@ namespace PriceComp.GUI
                     {
                         var cheapestOption = offersInStore.OrderBy(o => o.Price).First();
                         totalSum += cheapestOption.Price;
+                        basketOffers.Add(cheapestOption);
                     }
                     else
                     {
@@ -47,7 +51,8 @@ namespace PriceComp.GUI
                     Store = store,
                     Sum = totalSum + additionalCost,
                     DeliveryCost = additionalCost,
-                    MissingProducts = missing
+                    MissingProducts = missing,
+                    SelectedOffers = basketOffers
                 });
             }
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace PriceComp.GUI
+namespace PriceComp.GUI.Models
 {
     public class Offer : IPriceable, IComparable<Offer>
     {
@@ -17,7 +17,7 @@ namespace PriceComp.GUI
         public Product Product { get; private set; }
         public Store Store { get; private set; }
 
-        //public ICollection<OrderDetails> Order_Details { get; set; } = new List<OrderDetails>();
+        public ICollection<OrderDetails> Order_Details { get; set; } = new List<OrderDetails>();
 
         public decimal Price
         {

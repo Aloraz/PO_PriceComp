@@ -8,4 +8,8 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);GUI\**</DefaultItemExcludes>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="GUI\PriceComp.GUI.csproj" />
+  </ItemGroup>
+
 </Project>
