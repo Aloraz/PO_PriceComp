@@ -6,8 +6,10 @@ namespace PriceComp.GUI.Database
 {
     public class PriceCompContext : DbContext
     {
-        public PriceCompContext() : base("name=PriceCompDb")
+        public PriceCompContext() : base("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=PriceComp;Integrated Security=True;MultipleActiveResultSets=true")
         {
+            // Automatically recreate the database if we change the class models
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PriceCompContext>());
         }
 
         public DbSet<Product> Products { get; set; }
@@ -37,8 +39,20 @@ namespace PriceComp.GUI.Database
 
         public void SeedIfNotExists()
         {
-            if (!this.Offers.Any())
+            // If empty OR if we have corrupted records (no products linked)
+            if (!this.Offers.Any() || this.Offers.Any(o => o.Product == null))
             {
+                Console.WriteLine("[INFO] Wykryto brak danych lub uszkodzone rekordy. Resetowanie bazy...");
+                
+                // Clear existing corrupted data
+                this.OrderDetails.RemoveRange(this.OrderDetails);
+                this.Orders.RemoveRange(this.Orders);
+                this.Clients.RemoveRange(this.Clients);
+                this.Offers.RemoveRange(this.Offers);
+                this.Products.RemoveRange(this.Products);
+                this.Stores.RemoveRange(this.Stores);
+                this.SaveChanges();
+
                 PriceComp.GUI.DataSeeder.SeedToDatabase(this);
             }
         }

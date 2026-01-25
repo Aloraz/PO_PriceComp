@@ -13,6 +13,7 @@ using PriceComp.GUI.Models;
 
 using System.IO;
 using PriceComp.GUI.Database;
+using System.Data.Entity;
 
 namespace PriceComp.GUI;
 
@@ -34,7 +35,7 @@ public partial class MainWindow : Window
 
     private void LoadData()
     {
-        // 1. Seed Check
+        
         try
         {
             using (var context = new PriceComp.GUI.Database.PriceCompContext())
@@ -42,12 +43,8 @@ public partial class MainWindow : Window
                 context.Database.CreateIfNotExists();
                 context.SeedIfNotExists();
                 
-                // 2. Load form DB
-                /* 
-                 * We load from DB to get the real IDs (OfferID, etc.) 
-                 * which are required for correct saving of Orders later.
-                 * Loading from JSON directly would result in objects with ID=0.
-                 */
+                
+                 
                  _allOffers = context.Offers
                                      .Include("Store")
                                      .Include("Product")
@@ -56,11 +53,10 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Błąd bazy danych: {ex.Message}");
+            MessageBox.Show($"Błąd bazy danych: {ex.Message}\nInner: {ex.InnerException?.Message}\n{ex.StackTrace}");
         }
         
-        // Disable DataManager.LoadOffers() call from JSON, 
-        // because we want the DB entities.
+        
         
         UpdateGrid();
         UpdateProductsList();
@@ -181,7 +177,7 @@ public partial class MainWindow : Window
         }
     }
 
-    // Delegate definition
+    
     public delegate bool ValidationDelegate(string input, out string errorMessage);
 
     private void BtnAddOffer_Click(object sender, RoutedEventArgs e)
@@ -191,7 +187,6 @@ public partial class MainWindow : Window
             var store = ComboStores.SelectedItem as Store;
             if (store == null) { MessageBox.Show("Wybierz sklep!"); return; }
 
-            // Delegate validation logic
             ValidationDelegate validateName = (string input, out string error) => 
             {
                 if (string.IsNullOrWhiteSpace(input))
@@ -214,7 +209,7 @@ public partial class MainWindow : Window
                 return true;
             };
 
-            // Execute validation
+         
             if (!validateName(TxtNewName.Text, out string nameError)) 
             {
                  MessageBox.Show(nameError);
@@ -227,7 +222,7 @@ public partial class MainWindow : Window
                 return; 
             }
 
-            // Processing valid data
+            
             string name = TxtNewName.Text;
             decimal price = decimal.Parse(TxtNewPrice.Text);
             if (!decimal.TryParse(TxtNewQty.Text, out decimal qty)) qty = 1;

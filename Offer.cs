@@ -34,6 +34,8 @@ namespace PriceComp.GUI
 
         public decimal UnitPrice => Price / Product.Quantity;
 
+        protected Offer() { }
+
         public Offer(Product product, Store store, decimal price,
                      decimal? promoPrice = null, string promoDesc = null)
         {

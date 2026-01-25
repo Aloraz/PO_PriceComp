@@ -16,9 +16,7 @@ using PriceComp.GUI.Database;
 
 namespace PriceComp.GUI
 {
-    /// <summary>
-    /// Interaction logic for Payment.xaml
-    /// </summary>
+    
     public partial class Payment : Window
     {
         
@@ -43,7 +41,7 @@ namespace PriceComp.GUI
             {
                 using (var context = new PriceCompContext())
                 {
-                    // 1. Create Client
+                    
                     var client = new Client
                     {
                         FirstName = TxtFirstName.Text,
@@ -56,7 +54,6 @@ namespace PriceComp.GUI
                     };
                     context.Clients.Add(client);
 
-                    // 2. Create Order
                     var order = new Order
                     {
                         Client = client,
@@ -64,7 +61,7 @@ namespace PriceComp.GUI
                     };
                     context.Orders.Add(order);
 
-                    // 3. Group offers to calculate Quantity
+                    
                     var groupedItems = _offersToBuy
                         .GroupBy(o => o.OfferID)
                         .Select(g => new 
@@ -74,7 +71,7 @@ namespace PriceComp.GUI
                         })
                         .ToList();
 
-                    // 4. Create OrderDetails
+                    
                     foreach (var item in groupedItems)
                     {
                         var detail = new OrderDetails
@@ -86,7 +83,7 @@ namespace PriceComp.GUI
                         context.OrderDetails.Add(detail);
                     }
 
-                    // 5. Save all changes (Transaction)
+                   
                     context.SaveChanges();
                 }
 

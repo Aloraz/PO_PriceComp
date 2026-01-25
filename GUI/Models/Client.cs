@@ -15,7 +15,7 @@ namespace PriceComp.GUI.Models
         public string HouseNumber { get; set; }
         public string ApartmentNumber { get; set; }
         
-        // In a real application, never store card numbers in plain text!
+        
         public string EncryptedCardNumber { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();

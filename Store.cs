@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace PriceComp.GUI
+namespace PriceComp.GUI.Models
 {
     [JsonDerivedType(typeof(LocalStore), typeDiscriminator: "local")]
     [JsonDerivedType(typeof(OnlineStore), typeDiscriminator: "online")]
@@ -21,7 +21,7 @@ namespace PriceComp.GUI
         public string Name
         {
             get => _name;
-            protected set
+            set
             {
                 if (string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Nazwa sklepu nie może być pusta.");
@@ -36,7 +36,7 @@ namespace PriceComp.GUI
 
         protected Store() 
         {
-            Name = string.Empty;
+            _name = "Nowy Sklep";
         }
 
         public abstract decimal GetAdditionalCost();

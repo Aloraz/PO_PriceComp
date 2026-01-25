@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceComp.GUI
+namespace PriceComp.GUI.Models
 {
     public class OnlineStore : Store
     {
@@ -13,7 +13,7 @@ namespace PriceComp.GUI
         public decimal DeliveryCost
         {
             get => _deliveryCost;
-            private set
+            set
             {
                 if (value < 0)
                     throw new ArgumentException("Koszt dostawy nie może być ujemny.");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace PriceComp.GUI
+namespace PriceComp.GUI.Models
 {
     using System;
 
@@ -17,12 +17,10 @@ namespace PriceComp.GUI
 
             [Key]
             public int ProductID { get; set; }
-            public int StoreID { get; set; }
-            public Store Store { get; set; }
         public string Name
                 {
                     get => _name;
-                    private set
+                    set
                     {
                         if (string.IsNullOrWhiteSpace(value))
                             throw new ArgumentException("Nazwa produktu nie może być pusta.");
@@ -30,9 +28,9 @@ namespace PriceComp.GUI
                     }
                 }
 
-                public decimal Quantity { get; private set; }
+                public decimal Quantity { get; set; }
 
-                public string UnitName { get; private set; }
+                public string UnitName { get; set; }
 
                 public Product(string name, decimal quantity = 1.0m, string unitName = "szt/kg")
                 {
@@ -45,9 +43,9 @@ namespace PriceComp.GUI
             
             public Product()
             {
-                Name = string.Empty;
-                Quantity= 0;
-                UnitName = string.Empty;
+                _name = "Nowy Produkt";
+                Quantity = 1;
+                UnitName = "szt";
             }
                 public bool Equals(Product other)
                 {

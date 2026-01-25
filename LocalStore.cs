@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceComp.GUI
+namespace PriceComp.GUI.Models
 {
     public class LocalStore : Store
     {

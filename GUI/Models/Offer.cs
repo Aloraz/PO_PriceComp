@@ -14,25 +14,27 @@ namespace PriceComp.GUI.Models
         private decimal _price;
         [Key]
         public int OfferID { get; set; }
-        public Product Product { get; private set; }
-        public Store Store { get; private set; }
+        public Product Product { get; set; }
+        public Store Store { get; set; }
 
         public ICollection<OrderDetails> Order_Details { get; set; } = new List<OrderDetails>();
 
         public decimal Price
         {
             get => _price;
-            private set
+            set
             {
-                if (value <= 0) throw new InvalidPriceException("Cena musi być większa od zera.");
+                if (value < 0) throw new InvalidPriceException("Cena nie może być ujemna.");
                 _price = value;
             }
         }
 
-        public decimal? PromoPrice { get; private set; } 
-        public string PromoDescription { get; private set; }
+        public decimal? PromoPrice { get; set; } 
+        public string PromoDescription { get; set; }
 
         public decimal UnitPrice => Price / Product.Quantity;
+
+        public Offer() { }
 
         public Offer(Product product, Store store, decimal price,
                      decimal? promoPrice = null, string promoDesc = null)
