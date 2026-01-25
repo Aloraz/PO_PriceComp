@@ -261,4 +261,107 @@ public partial class MainWindow : Window
         SoundGenerator.PlaySound(500, 300, 0.4, true); 
         MessageBox.Show("Zapisano zmiany do pliku oferty.json", "Zapisano");
     }
+    private void BtnColaCustomers_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            using (var context = new PriceComp.GUI.Database.PriceCompContext())
+            {
+                // Query: Select unique customer full names who ordered products containing "Cola"
+                var customers = context.OrderDetails
+                    .Where(od => od.Offer.Product.Name.Contains("Cola"))
+                    .Select(od => new { Klient = od.Order.Client.FirstName + " " + od.Order.Client.LastName })
+                    .Distinct()
+                    .ToList();
+
+                GridAnalysisResults.ItemsSource = customers;
+                if (!customers.Any()) MessageBox.Show("Nie znaleziono klientów, którzy kupili Colę.");
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Błąd: {ex.Message}");
+        }
+    }
+
+    private void BtnOrderedProducts_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            using (var context = new PriceComp.GUI.Database.PriceCompContext())
+            {
+                // Query: Select unique product names from already ordered items
+                var products = context.OrderDetails
+                    .Select(od => new { Produkt = od.Offer.Product.Name })
+                    .Distinct()
+                    .OrderBy(p => p.Produkt)
+                    .ToList();
+
+                GridAnalysisResults.ItemsSource = products;
+                if (!products.Any()) MessageBox.Show("Brak zamówionych produktów w bazie.");
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Błąd: {ex.Message}");
+        }
+    }
+
+    private void BtnCheapProducts_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            using (var context = new PriceComp.GUI.Database.PriceCompContext())
+            {
+                var cheapOffers = context.Offers
+                    .Where(o => o.Price < 4.0m)
+                    .Select(o => new { Produkt = o.Product.Name, Sklep = o.Store.Name, Cena = o.Price })
+                    .ToList();
+
+                GridAnalysisResults.ItemsSource = cheapOffers;
+                if (!cheapOffers.Any()) MessageBox.Show("Nie znaleziono produktów tańszych niż 4 zł.");
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Błąd: {ex.Message}");
+        }
+    }
+    private void BtnExecuteSql_Click(object sender, RoutedEventArgs e)
+    {
+        string sql = TxtCustomSql.Text;
+        if (string.IsNullOrWhiteSpace(sql)) return;
+
+        try
+        {
+            using (var context = new PriceComp.GUI.Database.PriceCompContext())
+            {
+                var connection = context.Database.Connection;
+                bool wasOpen = connection.State == System.Data.ConnectionState.Open;
+                if (!wasOpen) connection.Open();
+
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = sql;
+                        using (var reader = command.ExecuteReader())
+                        {
+                            var dt = new System.Data.DataTable();
+                            dt.Load(reader);
+                            GridAnalysisResults.ItemsSource = dt.DefaultView;
+                        }
+                    }
+                }
+                finally
+                {
+                    if (!wasOpen) connection.Close();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Błąd SQL: {ex.Message}");
+        }
+    }
 }
